@@ -1,10 +1,9 @@
-// g++ dip02.cpp -std=c++11 `pkg-config --cflags --libs opencv4`
-#include <iostream>           //入出力関連ヘッダ
-#include <opencv2/opencv.hpp> //OpenCV関連ヘッダ
+#include <iostream>
+#include <opencv2/opencv.hpp>
 
 int main(int argc, const char *argv[]) {
 
-    // ①画像ファイルの読み込み
+    // 画像ファイルの読み込み
     cv::Mat sourceImage = cv::imread("color2.jpg", cv::IMREAD_COLOR);
     if (sourceImage.data == 0) { // 画像ファイルが読み込めなかった場合
         printf("File not found\n");
@@ -12,7 +11,7 @@ int main(int argc, const char *argv[]) {
     }
     printf("Width=%d, Height=%d\n", sourceImage.cols, sourceImage.rows);
 
-    // ③ウィンドウの生成と移動
+    // ウィンドウの生成と移動
     cv::namedWindow("Source");
     cv::moveWindow("Source", 0, 0);
     cv::namedWindow("Result");
@@ -38,14 +37,14 @@ int main(int argc, const char *argv[]) {
     // cv::cvtColor()関数で画像を BGR 画像に変換
     cv::cvtColor(resultImage, resultImage, cv::COLOR_HSV2BGR);
 
-    // ⑤ウィンドウへの画像の表示
+    // ウィンドウへの画像の表示
     cv::imshow("Source", sourceImage);
     cv::imshow("Result", resultImage);
 
-    // ⑥キー入力待ち
+    // キー入力待ち
     cv::waitKey(0);
 
-    // ⑦画像の保存
+    // 画像の保存
     cv::imwrite("result.jpg", resultImage);
 
     return 0;
