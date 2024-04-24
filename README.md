@@ -1,1 +1,1 @@
-# edu_2024digitalImageProcessing
+# edu_2024-DigitalImageProcessing
