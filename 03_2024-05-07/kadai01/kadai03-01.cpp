@@ -32,19 +32,18 @@ int main (int argc, const char* argv[])
     cv::moveWindow("Frame", 0,0);
     cv::namedWindow("Result");
     cv::moveWindow("Result", 0,height);
-
-    //fpsの定義
-    int fps = 30;
+    cv::namedWindow("Binary");
+    cv::moveWindow("Binary",width,0);
 
     //ビデオライタ生成
     //mp4
-    cv::VideoWriter rec("rec.mp4", cv::VideoWriter::fourcc('M', 'P', '4', 'V'), fps, recImage.size());
+    cv::VideoWriter rec("rec.mp4", cv::VideoWriter::fourcc('M', 'P', '4', 'V'), 30, recImage.size());
 
     //2値化画像の保存用
     cv::Mat binImage;
 
     //動画処理を10秒間だけ行う
-    for(int i = 0; i < fps*10; i++){
+    for(int i = 0; i < 30*10; i++){
         //カメラから1フレーム読み込んでcaptureImageに格納（CV_8UC3）
         capture >> captureImage;
 
@@ -55,11 +54,13 @@ int main (int argc, const char* argv[])
         cv::cvtColor(frameImage, grayImage, cv::COLOR_BGR2GRAY);
 
         //2値化
-        cv::threshold(grayImage, binImage, 128, 255, cv::THRESH_BINARY);
+        //顔がある程度認識できる閾値
+        cv::threshold(grayImage, binImage, 80, 255, cv::THRESH_BINARY);
 
         //ウィンドウへの画像の表示
         cv::imshow("Frame", frameImage);
         cv::imshow("Result", grayImage);
+        cv::imshow("Binary", binImage);
 
         //動画ファイルの書き出し
         //2値化画像をカラー画像に変換
@@ -68,7 +69,7 @@ int main (int argc, const char* argv[])
         rec << recImage;
 
         //キー入力待ち
-        char key = cv::waitKey(fps);
+        char key = cv::waitKey(30);
         if(key == 'q') break;
     }
     
