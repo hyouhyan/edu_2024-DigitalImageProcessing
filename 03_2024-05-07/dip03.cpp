@@ -24,27 +24,31 @@ int main (int argc, const char* argv[])
     cv::Mat frameImage = cv::mat(cv::Size(width, height), CV_8UC3);
     cv::mat grayImage;
 
-    //③ウィンドウの生成と移動
+    //ウィンドウの生成と移動
     cv::namedWindow("Frame");
     cv::moveWindow("Frame", 0,0);
     cv::namedWindow("Result");
     cv::moveWindow("Result", 0,height);
 
-    
-    //④カメラから1フレーム読み込んでcaptureImageに格納（CV_8UC3）
-    
-    
-    //⑤captureImageをframeImageに合わせてサイズ変換して格納
+    //カメラから1フレーム読み込んでcaptureImageに格納（CV_8UC3）
+    capture >> captureImage;
     
     
-    //⑥画像処理
+    //captureImageをframeImageに合わせてサイズ変換して格納
+    cv::resize(captureImage, frameImage, frameImage.size());
     
     
-    //⑦ウィンドウへの画像の表示
+    //画像処理
+    cv::cvtColor(frameImage, grayImage, cv::COLOR_BGR2GRAY);
     
     
-    //⑧キー入力待ち
-    char key = cv::waitKey(0);
+    //ウィンドウへの画像の表示
+    cv::imshow("Frame", frameImage);
+    cv::imshow("Result", grayImage);
+    
+    
+    //キー入力待ち
+    cv::waitKey(0);
     
     
     return 0;
