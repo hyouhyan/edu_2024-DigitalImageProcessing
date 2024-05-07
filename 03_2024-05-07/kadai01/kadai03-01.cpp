@@ -33,15 +33,18 @@ int main (int argc, const char* argv[])
     cv::namedWindow("Result");
     cv::moveWindow("Result", 0,height);
 
+    //fpsの定義
+    int fps = 30;
+
     //ビデオライタ生成
     //mp4
-    cv::VideoWriter rec("rec.mp4", cv::VideoWriter::fourcc('M', 'P', '4', 'V'), 30, recImage.size());
+    cv::VideoWriter rec("rec.mp4", cv::VideoWriter::fourcc('M', 'P', '4', 'V'), fps, recImage.size());
 
     //2値化画像の保存用
     cv::Mat binImage;
 
     //動画処理を10秒間だけ行う
-    for(int i = 0; i < 300; i++){
+    for(int i = 0; i < fps*10; i++){
         //カメラから1フレーム読み込んでcaptureImageに格納（CV_8UC3）
         capture >> captureImage;
 
@@ -65,7 +68,7 @@ int main (int argc, const char* argv[])
         rec << recImage;
 
         //キー入力待ち
-        char key = cv::waitKey(20);
+        char key = cv::waitKey(fps);
         if(key == 'q') break;
     }
     
