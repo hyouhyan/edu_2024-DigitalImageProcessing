@@ -33,8 +33,11 @@ int main (int argc, const char* argv[])
     cv::namedWindow("Result");
     cv::moveWindow("Result", 0,height);
 
+    //fpsの定義
+    int fps = 30;
+
     //ビデオライタ生成
-    cv::VideoWriter rec("rec.mpg", cv::VideoWriter::fourcc('P','I','M','1'), 30, recImage.size());
+    cv::VideoWriter rec("rec.mpg", cv::VideoWriter::fourcc('P','I','M','1'), fps, recImage.size());
 
     //動画処理無限ループ
     while(1){
@@ -58,7 +61,7 @@ int main (int argc, const char* argv[])
         rec << recImage;
 
         //キー入力待ち
-        char key = cv::waitKey(20);
+        char key = cv::waitKey(fps);
         if(key == 'q') break;
     }
     
