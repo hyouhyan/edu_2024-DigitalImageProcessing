@@ -50,7 +50,7 @@ int main (int argc, const char* argv[])
         
         
         //キー入力待ち
-        char key = cv::waitKey(0);
+        char key = cv::waitKey(20);
         if(key == 'q') break;
     }
     
