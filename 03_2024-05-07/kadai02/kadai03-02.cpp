@@ -54,7 +54,7 @@ int main (int argc, const char* argv[])
                 //hsvの値を取得
                 cv::Vec3b hsv = hsvImage.at<cv::Vec3b>(y, x);
                 //hsvの値をもとに、グリーンバッグを削除
-                if(hsv[0] > 40 && hsv[0] < 90 && hsv[1] > 60 && hsv[2] > 50){
+                if(40 <= hsv[0] && hsv[0] <= 50 && 160 <= hsv[1]){
                     hsv[0] = 0;
                     hsv[1] = 0;
                     hsv[2] = 0;
