@@ -63,13 +63,17 @@ int main (int argc, const char* argv[])
                 //hsvの値をもとに、グリーンバッグを削除
                 if(40 <= hsv[0] && hsv[0] <= 50 && 160 <= hsv[1]){
                     frameImage.at<cv::Vec3b>(y, x) = frame2Image.at<cv::Vec3b>(y, x);
+                    recImage.at<cv::Vec3b>(y, x) = frame2Image.at<cv::Vec3b>(y, x);
+                }else{
+                    recImage.at<cv::Vec3b>(y, x) = frameImage.at<cv::Vec3b>(y, x);
+                
                 }
             }
         }
 
         //動画ファイルの書き出し
         //動画用3チャンネル画像生成
-        cv::cvtColor(hsvImage, recImage, cv::COLOR_HSV2BGR);
+        // cv::cvtColor(hsvImage, recImage, cv::COLOR_HSV2BGR);
         //ビデオライタに画像出力
         rec << recImage;
 
