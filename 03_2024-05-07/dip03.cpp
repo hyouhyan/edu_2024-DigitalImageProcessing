@@ -21,8 +21,8 @@ int main (int argc, const char* argv[])
     cv::Mat captureImage;
 
     //処理用
-    cv::Mat frameImage = cv::mat(cv::Size(width, height), CV_8UC3);
-    cv::mat grayImage;
+    cv::Mat frameImage = cv::Mat(cv::Size(width, height), CV_8UC3);
+    cv::Mat grayImage;
 
     //ウィンドウの生成と移動
     cv::namedWindow("Frame");
