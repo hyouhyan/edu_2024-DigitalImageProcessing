@@ -51,6 +51,12 @@ int main (int argc, const char* argv[])
         cv::imshow("Frame", frameImage);
         cv::imshow("Result", grayImage);
 
+        //動画ファイルの書き出し
+        //動画用3チャンネル画像生成
+        cv::cvtColor(grayImage, recImage, cv::COLOR_GRAY2BGR);
+        //ビデオライタに画像出力
+        rec << recImage;
+
         //キー入力待ち
         char key = cv::waitKey(20);
         if(key == 'q') break;
