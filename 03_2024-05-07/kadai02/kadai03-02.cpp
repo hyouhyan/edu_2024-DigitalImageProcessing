@@ -22,7 +22,7 @@ int main (int argc, const char* argv[])
 
     //処理用
     cv::Mat frameImage = cv::Mat(cv::Size(width, height), CV_8UC3);
-    cv::Mat grayImage;
+    cv::Mat hsvImage;
 
     //ファイル出力用
     cv::Mat recImage = cv::Mat(cv::Size(width, height), CV_8UC3);
@@ -45,20 +45,36 @@ int main (int argc, const char* argv[])
         cv::resize(captureImage, frameImage, frameImage.size());
 
         //画像処理
-        cv::cvtColor(frameImage, grayImage, cv::COLOR_BGR2GRAY);
+        //hsvに変換
+        cv::cvtColor(frameImage, hsvImage, cv::COLOR_BGR2HSV);
 
-        //ウィンドウへの画像の表示
-        cv::imshow("Frame", frameImage);
-        cv::imshow("Result", grayImage);
+        //フレームを走査し、グリーンバッグを削除(黒で塗りつぶす)
+        for(int y = 0; y < hsvImage.rows; y++){
+            for(int x = 0; x < hsvImage.cols; x++){
+                //hsvの値を取得
+                cv::Vec3b hsv = hsvImage.at<cv::Vec3b>(y, x);
+                //hsvの値をもとに、グリーンバッグを削除
+                if(hsv[0] > 40 && hsv[0] < 90 && hsv[1] > 60 && hsv[2] > 50){
+                    hsv[0] = 0;
+                    hsv[1] = 0;
+                    hsv[2] = 0;
+                    hsvImage.at<cv::Vec3b>(y, x) = hsv;
+                }
+            }
+        }
 
         //動画ファイルの書き出し
         //動画用3チャンネル画像生成
-        cv::cvtColor(grayImage, recImage, cv::COLOR_GRAY2BGR);
+        cv::cvtColor(hsvImage, recImage, cv::COLOR_HSV2BGR);
         //ビデオライタに画像出力
         rec << recImage;
 
+        //ウィンドウへの画像の表示
+        cv::imshow("Frame", frameImage);
+        cv::imshow("Result", recImage);
+
         //キー入力待ち
-        char key = cv::waitKey(30);
+        char key = cv::waitKey(20);
         if(key == 'q') break;
     }
     
