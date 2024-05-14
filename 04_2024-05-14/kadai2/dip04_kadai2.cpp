@@ -5,7 +5,7 @@ int main (int argc, const char* argv[])
 {
     int width = 640, height = 480;
     
-    //①カメラの初期化
+    //カメラの初期化
     cv::VideoCapture capture(0);  //カメラ0番をオープン
     //カメラがオープンできたかどうかをチェック
     if (capture.isOpened()==0) {
@@ -13,20 +13,20 @@ int main (int argc, const char* argv[])
         return -1;
     }
     
-    //②画像格納用インスタンス準備
+    //画像格納用インスタンス準備
     cv::Mat captureImage;  //キャプチャ用
     cv::Mat frameImage = cv::Mat(cv::Size(width,height), CV_8UC3);  //処理用
     cv::Mat grayImage(cv::Size(width,height), CV_8UC1);  //1チャンネル
     cv::Mat resultGImage(cv::Size(width,height), CV_8UC1);  //1チャンネル
     cv::Mat recImage(cv::Size(width,height), CV_8UC3);  //3チャンネル
     
-    //③ウィンドウの生成と移動
+    //ウィンドウの生成と移動
     cv::namedWindow("Frame");
     cv::moveWindow("Frame", 0, 0);
     cv::namedWindow("Result");
     cv::moveWindow("Result", width, height);
     
-    //④ルックアップテーブルの作成
+    //ルックアップテーブルの作成
     unsigned char lookupTable[256];
 
     for(int i=0; i<256; i++){
@@ -34,19 +34,19 @@ int main (int argc, const char* argv[])
         lookupTable[i] = (i/43)*43;
     }
     
-    //⑤ビデオライタ生成(ファイル名，コーデック，フレームレート，フレームサイズ)
+    //ビデオライタ生成(ファイル名，コーデック，フレームレート，フレームサイズ)
     cv::VideoWriter rec("rec.mp4", cv::VideoWriter::fourcc('M','P','4','V'), 30, recImage.size());
 
     //hsvイメージを格納するためのインスタンス
     cv::Mat hsvImage(cv::Size(width,height), CV_8UC3);
     
-    //⑥動画像処理無限ループ
+    //動画像処理無限ループ
     while (1) {
-        //(a)カメラから1フレームを" captureImage"に読み込み
+        //カメラから1フレームを" captureImage"に読み込み
         capture >> captureImage;
         if (captureImage.data==NULL) break;
         
-        //(b)" captureImage"をリサイズして" frameImage"に格納
+        //"captureImage"をリサイズして"frameImage"に格納
         cv::resize(captureImage, frameImage, frameImage.size());
         
         //hsvに変換
@@ -72,15 +72,15 @@ int main (int argc, const char* argv[])
         //hsvからbgrに変換
         cv::cvtColor(hsvImage, resultGImage, cv::COLOR_HSV2BGR);
         
-        //(e)ウィンドウへの画像の表示
+        //ウィンドウへの画像の表示
         cv::imshow("Frame", frameImage);
         cv::imshow("Result", resultGImage);
         
-        //(f)動画ファイル書き出し
+        //動画ファイル書き出し
         // cv::cvtColor(resultGImage, recImage, cv::COLOR_BGR2RGB);  //BGR→RGB
         rec << resultGImage;  //ビデオライタに画像出力
         
-        //(g)キー入力待ち
+        //キー入力待ち
         char key = cv::waitKey(20);  //20ミリ秒待機
         if (key=='q') break;
     }
