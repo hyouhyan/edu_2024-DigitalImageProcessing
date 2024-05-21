@@ -81,11 +81,7 @@ int main(int argc, char *argv[]) {
         cv::filter2D(grayImage, kernelImage, grayImage.depth(), kernel);
 
         // エッジ検出を行い、輪郭動画を生成
-        // cv::Mat edgeImage;
-        cv::Canny(kernelImage, resultImage, 50, 200);
-        
-
-
+        cv::Canny(kernelImage, resultImage, 20, 180);
 
         //(e)ウィンドウに画像表示
         cv::imshow("Original", originalImage);
