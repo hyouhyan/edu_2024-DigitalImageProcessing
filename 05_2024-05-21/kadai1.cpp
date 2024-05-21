@@ -41,6 +41,7 @@ int main(int argc, char *argv[]) {
     cv::Mat grayImage(cv::Size(width, height), CV_8UC1);
     cv::Mat resultImage(cv::Size(width, height), CV_8UC1);
     cv::Mat kernelImage(cv::Size(width, height), CV_8UC1);
+    cv::Mat recImage(cv::Size(width, height), CV_8UC3);
 
     //③画像表示用ウィンドウの生成
     cv::namedWindow("Original");
@@ -63,6 +64,8 @@ int main(int argc, char *argv[]) {
 
     //一次元配列の要素に基づき，線形空間フィルタをCvMat型の5x5行列"kernel"として生成
     cv::Mat kernel(cv::Size(5, 5), CV_32F, fdata);
+
+    cv::VideoWriter rec("rec.mp4", cv::VideoWriter::fourcc('M','P','4','V'), 30, recImage.size());
 
     //⑤動画像処理無限ループ：「ビデオキャプチャから1フレーム取り込み」→「画像処理」→「表示」の繰り返し
     while (1) {
@@ -88,6 +91,9 @@ int main(int argc, char *argv[]) {
         cv::imshow("Gray", grayImage);
         cv::imshow("Kernel", kernelImage);
         cv::imshow("Result", resultImage);
+
+        cv::cvtColor(resultImage, recImage, cv::COLOR_GRAY2BGR);
+        rec << recImage;
 
         //(f)[q]キーが押されたら無限ループから脱出
         int key = cv::waitKey(10);
