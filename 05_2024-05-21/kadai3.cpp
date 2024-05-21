@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
     cv::Mat animeImage(cv::Size(width, height), CV_8UC3);
     cv::Mat resultImage(cv::Size(width, height), CV_8UC3);
 
-    cv::VideoWriter rec("dip05_kadai2.mp4", cv::VideoWriter::fourcc('H', '2', '6', '4'), 30, originalImage.size());
+    cv::VideoWriter rec("dip05_kadai3.mp4", cv::VideoWriter::fourcc('H', '2', '6', '4'), 30, originalImage.size());
 
     while (true) {
         capture >> frameImage;
