@@ -83,7 +83,7 @@ int main(int argc, char *argv[]) {
         cv::imshow("Result", resultImage);
 
         //(f)[q]キーが押されたら無限ループから脱出
-        int key = cvWaitKey(10);
+        int key = cv::waitKey(10);
         if (key == 'q')
             break;
     }
