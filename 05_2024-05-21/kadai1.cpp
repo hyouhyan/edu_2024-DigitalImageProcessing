@@ -49,6 +49,8 @@ int main(int argc, char *argv[]) {
     cv::moveWindow("Gray", 0, 200);
     cv::namedWindow("Result");
     cv::moveWindow("Result", 200, 200);
+    cv::namedWindow("Kernel");
+    cv::moveWindow("Kernel", 200, 50);
 
     //④線形空間フィルタの生成
     //線形空間フィルタの係数を要素とする1次元配列の作成(5x5の平均値フィルタ用)
@@ -88,6 +90,7 @@ int main(int argc, char *argv[]) {
         //(e)ウィンドウに画像表示
         cv::imshow("Original", originalImage);
         cv::imshow("Gray", grayImage);
+        cv::imshow("Kernel", kernelImage);
         cv::imshow("Result", resultImage);
 
         //(f)[q]キーが押されたら無限ループから脱出
