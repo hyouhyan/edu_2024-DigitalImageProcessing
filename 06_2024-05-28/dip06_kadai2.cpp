@@ -129,7 +129,10 @@ int main(int argc, const char *argv[]) {
     cv::imshow("Binary", binImage); // ウィンドウに画像を表示
 
     // 画像の出力
-    // cv::imwrite("dip06_kadai2_result.jpg", contourImage);
+    cv::imwrite("dip06_kadai2_result.jpg", contourImage);
+
+    // binImageの出力
+    cv::imwrite("dip06_kadai2_bin.jpg", binImage);
 
     // ⑦キー入力があるまでここでストップ
     cv::waitKey(0);
