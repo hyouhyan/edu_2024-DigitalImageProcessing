@@ -98,12 +98,15 @@ int main(int argc, const char *argv[]) {
         }
     }
 
-    // 輪郭データ"contour"を順次描画
+    // 輪郭データ"circleContour"を順次描画
     for (int i = 0; i < circleContours.size(); i++) {
         // "contourImage"に"contours"の i 番目の領域の輪郭を描画(白色，線幅2，8連結)
         cv::drawContours(contourImage, circleContours, i, cv::Scalar(255, 255, 255), 2, 8);
 
         printf("円%d: Length=%.0f, Area=%.0f\n", i + 1, cv::arcLength(circleContours[i], true), cv::contourArea(circleContours[i]));
+
+        //binImageを塗りつぶす
+        cv::drawContours(binImage, circleContours, i, cv::Scalar(255, 255, 255), -1);
     }
 
 
@@ -126,7 +129,7 @@ int main(int argc, const char *argv[]) {
     cv::imshow("Binary", binImage); // ウィンドウに画像を表示
 
     // 画像の出力
-    cv::imwrite("dip06_kadai2_result.jpg", contourImage);
+    // cv::imwrite("dip06_kadai2_result.jpg", contourImage);
 
     // ⑦キー入力があるまでここでストップ
     cv::waitKey(0);
