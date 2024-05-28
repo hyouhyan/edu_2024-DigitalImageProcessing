@@ -26,11 +26,6 @@ int main(int argc, const char *argv[]) {
     //"sourceImage"のコピーを"contourImage"に出力
     contourImage = sourceImage.clone();
 
-    //膨張収縮処理
-    cv::Mat element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3));
-    cv::dilate(binImage, binImage, element, cv::Point(-1, -1), 1);
-    cv::erode(binImage, binImage, element, cv::Point(-1, -1), 4);
-
 
     // ④輪郭点格納用配列、輪郭の階層用配列の確保
     // 輪郭点格納用配列
@@ -49,19 +44,69 @@ int main(int argc, const char *argv[]) {
 
     int circleCount = 0;
 
+    //画像の背景色を取得
+    cv::Vec3b bgColor = sourceImage.at<cv::Vec3b>(0, 0);
+
+
     // 輪郭データ"contour"を順次描画
     for (int i = 0; i < contours.size(); i++) {
         // 円形度を計算
         circularity = 4.0 * M_PI * cv::contourArea(contours[i]) / (cv::arcLength(contours[i], true) * cv::arcLength(contours[i], true));
 
-
-        // 円形度が一定以上かつ、一定面積以上の図形のみを描画
-        if (circularity >= 0.8) {
-            cv::drawContours(contourImage, contours, i, cv::Scalar(255, 255, 255), 5, 8);
+        // 円形度が0.8以上の図形のみをcircleContoursに格納
+        // 面積が1000以上
+        if (circularity >= 0.8 && cv::contourArea(contours[i]) >= 1000){
+            circleContours.push_back(contours[i]);
             circleCount++;
-            printf("円%d: Length = %.0f, Area = %.0f\n", circleCount, cv::arcLength(contours[i], true), cv::contourArea(contours[i]));
+
+            // 背景色で塗りつぶしを行う
+            cv::drawContours(sourceImage, circleContours, -1, bgColor, -1);
         }
     }
+
+    // countourImageをグレースケールに変換
+    cv::cvtColor(sourceImage, grayImage, cv::COLOR_BGR2GRAY);
+
+    // 2値化
+    cv::threshold(grayImage, binImage, 50, 255, cv::THRESH_BINARY);
+
+    //膨張収縮処理
+    cv::Mat element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3));
+    cv::erode(binImage, binImage, element, cv::Point(-1, -1), 1);
+    cv::dilate(binImage, binImage, element, cv::Point(-1, -1), 1);
+
+    cv::dilate(binImage, binImage, element, cv::Point(-1, -1), 2);
+    cv::erode(binImage, binImage, element, cv::Point(-1, -1), 2);
+
+    tmpImage = binImage.clone();
+
+    cv::findContours(binImage, contours, cv::RETR_LIST, cv::CHAIN_APPROX_NONE);
+
+    for (int i = 0; i < contours.size(); i++) {
+        // 円形度を計算
+        circularity = 4.0 * M_PI * cv::contourArea(contours[i]) / (cv::arcLength(contours[i], true) * cv::arcLength(contours[i], true));
+
+        printf("circularity: %f\n", circularity);
+
+        // 円形度が0.8以上の図形のみをcircleContoursに格納
+        if (circularity >= 0.8  && cv::contourArea(contours[i]) >= 1000 ) {
+            circleContours.push_back(contours[i]);
+            circleCount++;
+
+            // 背景色で塗りつぶしを行う
+            cv::drawContours(sourceImage, circleContours, -1, bgColor, -1);
+        }
+    }
+
+    // 輪郭データ"contour"を順次描画
+    for (int i = 0; i < circleContours.size(); i++) {
+        // "contourImage"に"contours"の i 番目の領域の輪郭を描画(白色，線幅2，8連結)
+        cv::drawContours(contourImage, circleContours, i, cv::Scalar(255, 255, 255), 2, 8);
+
+        printf("円%d: Length=%.0f, Area=%.0f\n", i + 1, cv::arcLength(circleContours[i], true), cv::contourArea(circleContours[i]));
+    }
+
+
     // ⑥ウィンドウを生成して各画像を表示
     // 原画像
     cv::namedWindow("Source");       // ウィンドウの生成
