@@ -38,6 +38,8 @@ int main (int argc, const char * argv[])
         
         std::vector<std::vector<cv::Point>> contours;
         cv::findContours(mask, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+
+        cv::cvtColor(hsvImage, resultImage, cv::COLOR_HSV2BGR);
         
         cv::Point2f center;
         float radius;
@@ -51,7 +53,10 @@ int main (int argc, const char * argv[])
             cv::minEnclosingCircle(largestContour, center, radius);
             trajectory.push_back(center);
             cv::circle(frameImage, center, radius, cv::Scalar(255, 255, 255), 2);
+            cv::circle(resultImage, center, radius, cv::Scalar(255, 255, 255), -1);
         }
+
+        cv::cvtColor(resultImage, hsvImage, cv::COLOR_BGR2HSV);
         
         for (size_t i = 0; i < trajectory.size(); ++i) {
             int h = (i * 10) % 180; // 0-179 の範囲で色相を設定
@@ -65,7 +70,7 @@ int main (int argc, const char * argv[])
         cv::imshow("Frame", frameImage);
         cv::imshow("Result", resultImage);
         
-        rec << frameImage;
+        rec << resultImage;
         
         char key = cv::waitKey(30);
         if (key == 'q') break;
