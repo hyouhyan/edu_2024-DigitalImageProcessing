@@ -46,14 +46,21 @@ int main (int argc, char * argv[])
         cv::cvtColor(frameImage, presentImage, cv::COLOR_BGR2GRAY);
         
         //(c)"priorImage"から特徴点を抽出して"priorFeature[]"に出力
-        
+        cv::goodFeaturesToTrack(priorImage, priorFeature, 300, 0.01, 10);
         
         //(d)オプティカルフロー検出・描画
-        
+        int opCnt = priorFeature.size(); //特徴点数
+
         if (opCnt>0) {  //特徴点が存在する場合
             //前フレームの特徴点"priorFeature"から，対応する現フレームの特徴点"presentFeature"を検出
+            cv::calcOpticalFlowPyrLK(priorImage, presentImage, priorFeature, presentFeature, status, errors, cv::Size(10,10), 4, criteria);
 
             //オプティカルフロー描画
+            for(int i=0; i<opCnt; i++){
+                cv::Point pt1 = cv::Point(priorFeature[i]); //前フレーム特徴点
+                cv::Point pt2 = cv::Point(presentFeature[i]); //現フレーム特徴点
+                cv::line(optImage, pt1, pt2, cv::Scalar(0,0,255), 1, 8); //直線描画
+            }
 
         }
         
@@ -62,10 +69,10 @@ int main (int argc, char * argv[])
         cv::imshow("OpticalFlow", optImage);
         
         //(f)現フレームグレースケール画像"presentImage"を前フレームグレースケール画像"priorImage"にコピー
-        
+        presentImage.copyTo(priorImage);
         
         //(g)"optImage"をゼロセット
-
+        optImage = cv::Scalar(0);
         
         //(h)キー入力待ち
         int key = cv::waitKey(20);
