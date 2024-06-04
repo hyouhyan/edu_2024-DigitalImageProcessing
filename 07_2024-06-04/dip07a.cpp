@@ -18,6 +18,7 @@ int main (int argc, char* argv[])
     cv::Mat frameImage(imageSize, CV_8UC3);
     cv::Mat backImage(imageSize, CV_8UC3);
     cv::Mat subImage(imageSize, CV_8UC3);
+    cv::Mat subBinImage(imageSize, CV_8UC1);
     
     //③画像表示用ウィンドウの生成
     cv::namedWindow("Frame");
