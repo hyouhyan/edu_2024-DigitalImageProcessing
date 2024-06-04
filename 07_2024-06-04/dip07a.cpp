@@ -38,20 +38,27 @@ int main (int argc, char* argv[])
         
         //(b)"frameImage"と"backImage"との差分画像"subImage"の生成
         cv::absdiff(frameImage, backImage, subImage);
+
+        //(b')"subImage"をグレースケール変換→しきい値処理した画像"subBinImage"を生成
+        cv::cvtColor(subImage, subBinImage, cv::COLOR_BGR2GRAY);
+        cv::threshold(subBinImage, subBinImage, 30, 255, cv::THRESH_BINARY);
         
         //(c)"frameImage"，"backImage"，"subImage"の表示
         cv::imshow("Frame", frameImage);
         cv::imshow("Back", backImage);
-        cv::imshow("Subtraction", subImage);
+        cv::imshow("Subtraction", subBinImage);
         
         //(d)"frameImage"で"backImage"を更新
         frameImage.copyTo(backImage);
         
         //(e)キー入力待ち
         int key = cv::waitKey(20);
+
         //[Q]が押されたら無限ループ脱出
-        if (key=='q')
-            break;
+        if (key=='q') break;
+
+        //[C]が押されたら"frameImage"で"backImage"を更新
+        if (key=='c') frameImage.copyTo(backImage);
     }
     
     //⑤終了処理
