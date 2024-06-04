@@ -19,6 +19,7 @@ int main (int argc, char* argv[])
     cv::Mat backImage(imageSize, CV_8UC3);
     cv::Mat subImage(imageSize, CV_8UC3);
     cv::Mat subBinImage(imageSize, CV_8UC1);
+    cv::Mat resultImage(imageSize, CV_8UC3);
     
     //③画像表示用ウィンドウの生成
     cv::namedWindow("Frame");
@@ -27,6 +28,8 @@ int main (int argc, char* argv[])
     cv::moveWindow("Back", 50, 50);
     cv::namedWindow("Subtraction");
     cv::moveWindow("Subtraction", 100, 100);
+    cv::namedWindow("Result");
+    cv::moveWindow("Result", 150, 150);
     
     //④動画処理用無限ループ
     while (1) {
@@ -43,11 +46,16 @@ int main (int argc, char* argv[])
         //(b')"subImage"をグレースケール変換→しきい値処理した画像"subBinImage"を生成
         cv::cvtColor(subImage, subBinImage, cv::COLOR_BGR2GRAY);
         cv::threshold(subBinImage, subBinImage, 30, 255, cv::THRESH_BINARY);
+
+        //(b")"frameImage"を"subBinImage"マスク付きで"resultImage"にコピー
+        resultImage = cv::Scalar(0);
+        frameImage.copyTo(resultImage, subBinImage);
         
         //(c)"frameImage"，"backImage"，"subImage"の表示
         cv::imshow("Frame", frameImage);
         cv::imshow("Back", backImage);
         cv::imshow("Subtraction", subBinImage);
+        cv::imshow("Result", resultImage);
         
         //(d)"frameImage"で"backImage"を更新
         frameImage.copyTo(backImage);
