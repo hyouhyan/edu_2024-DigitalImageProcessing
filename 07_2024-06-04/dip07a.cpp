@@ -37,6 +37,7 @@ int main (int argc, char* argv[])
         cv::resize(originalImage, frameImage, imageSize);
         
         //(b)"frameImage"と"backImage"との差分画像"subImage"の生成
+        cv::absdiff(frameImage, backImage, subImage);
         
         //(c)"frameImage"，"backImage"，"subImage"の表示
         cv::imshow("Frame", frameImage);
@@ -44,6 +45,7 @@ int main (int argc, char* argv[])
         cv::imshow("Subtraction", subImage);
         
         //(d)"frameImage"で"backImage"を更新
+        frameImage.copyTo(backImage);
         
         //(e)キー入力待ち
         int key = cv::waitKey(20);
