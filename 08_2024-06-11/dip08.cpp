@@ -21,18 +21,25 @@ int main(int argc, const char* argv[])
     cv::Mat translateImage = cv::Mat::zeros(sourceImage.size(), CV_8UC3);
     
     //④回転移動行列"rotateMat"の生成
-    cv::Point2f center = cv::Point2f(sourceImage.cols/2, sourceImage.rows/2);  //回転中心
-    double angle = -45.0;  //回転角度
-    double scale = 1.0;  //拡大率
-    cv::Mat rotateMat = cv::getRotationMatrix2D(center, angle, scale); //行列生成
+    cv::Point2f original[4], translate[4];
+    original[0] = cv::Point2f(0, 0); //A(オリジナル左上)
+    original[1] = cv::Point2f(sourceImage.cols, 0); //B(オリジナル右上)
+    original[2] = cv::Point2f(sourceImage.cols, sourceImage.rows); //C(オリジナル右下)
+    original[3] = cv::Point2f(0, sourceImage.rows); //D(オリジナル左下)
+    translate[0] = cv::Point2f(sourceImage.cols/4.0, sourceImage.rows/3.0); //A'(変換後左上)
+    translate[1] = cv::Point2f(sourceImage.cols*3.0/4.0, sourceImage.rows/3.0); //B'(変換後右上)
+    translate[2] = cv::Point2f(sourceImage.cols, sourceImage.rows); //C'(変換後右下)
+    translate[3] = cv::Point2f(0, sourceImage.rows); //D'(変換後左下)
+    cv::Mat persMat = cv::getPerspectiveTransform(original, translate); //行列生成
 
     //行列要素表示(確認用)
     printf("%f %f %f\n", rotateMat.at<double>(0, 0), rotateMat.at<double>(0, 1), rotateMat.at<double>(0, 2));
     printf("%f %f %f\n", rotateMat.at<double>(1, 0), rotateMat.at<double>(1, 1), rotateMat.at<double>(1, 2));
+    printf("%f %f %f\n", persMat.at<double>(2,0), persMat.at<double>(2,1), persMat.at<double>(2,2));
     
     //⑤"sourceImage"に回転移動"rotateMat"を施して"translateImage"に張り付け
     //値が決定されない画素は黒で塗りつぶし．
-    cv::warpAffine(sourceImage, translateImage, rotateMat, translateImage.size(), cv::INTER_LINEAR, cv::BORDER_CONSTANT, cv::Scalar(0,0,0));
+    cv::warpPerspective(sourceImage, translateImage, persMat, translateImage.size(), cv::INTER_LINEAR, cv::BORDER_CONSTANT, cv::Scalar(0,0,0));
     
     //⑥"translateImage"の表示
     cv::imshow("Translate", translateImage);
