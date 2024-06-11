@@ -22,7 +22,7 @@ int main(void){
     double scale = 1.0;
     double angle = 0.0;
 
-    cv::VideoWriter rec("./dst/dip08_kadai0.mp4", cv::VideoWriter::fourcc('m', 'p', '4', 'v'), 30, frameImage.size());
+    cv::VideoWriter rec("./dst/dip08_kadai0_k22047.mp4", cv::VideoWriter::fourcc('m', 'p', '4', 'v'), 30, frameImage.size());
 
     // 10秒の動画を作成するためのループ
     for (int i = 0; i < 300; i++) {
