@@ -33,8 +33,8 @@ int main(int argc, const char* argv[])
     cv::Mat persMat = cv::getPerspectiveTransform(original, translate); //行列生成
 
     //行列要素表示(確認用)
-    printf("%f %f %f\n", rotateMat.at<double>(0, 0), rotateMat.at<double>(0, 1), rotateMat.at<double>(0, 2));
-    printf("%f %f %f\n", rotateMat.at<double>(1, 0), rotateMat.at<double>(1, 1), rotateMat.at<double>(1, 2));
+    printf("%f %f %f\n", persMat.at<double>(0, 0), persMat.at<double>(0, 1), persMat.at<double>(0, 2));
+    printf("%f %f %f\n", persMat.at<double>(1, 0), persMat.at<double>(1, 1), persMat.at<double>(1, 2));
     printf("%f %f %f\n", persMat.at<double>(2,0), persMat.at<double>(2,1), persMat.at<double>(2,2));
     
     //⑤"sourceImage"に回転移動"rotateMat"を施して"translateImage"に張り付け
