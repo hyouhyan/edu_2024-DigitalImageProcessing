@@ -60,10 +60,9 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    // ビデオライタ生成(ファイル名，コーデック(mp4v/mov)，フレームレート，フレームサイズ)
-    // cv::VideoWriter rec("./dst/dip08_kadai2_k22047.mp4", cv::VideoWriter::fourcc('m', 'p', '4', 'v'), 30, cv::Size(width, height));
-    // 解像度は480pに設定
-    cv::VideoWriter rec("./dst/dip08_kadai2_k22047.mov", cv::VideoWriter::fourcc('m', 'p', '4', 'v'), 30, cv::Size(640, 480));
+    // mp4での動画書き出し
+    // ファイルサイズを小さくするために、ビデオコーデックをH.264に指定
+    cv::VideoWriter rec("./dst/dip08_kadai2_k22047.mp4", cv::VideoWriter::fourcc('H', '2', '6', '4'), 30, imageSize);
 
     // オプティカルフロー用終了条件
     cv::TermCriteria criteria = cv::TermCriteria(cv::TermCriteria::MAX_ITER | cv::TermCriteria::EPS, 30, 0.01);
