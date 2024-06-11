@@ -5,7 +5,7 @@
 int main (int argc, const char * argv[])
 {
     //ビデオファイル"colball.mov"を取り込み
-    cv::VideoCapture capture("colball.mov");
+    cv::VideoCapture capture("./src/colball.mov");
     if (capture.isOpened()==0) {
         printf("No video\n");
         return -1;
@@ -16,7 +16,7 @@ int main (int argc, const char * argv[])
     printf("Frame Size = (%d %d)\n", width, height);
     
     //合成用画像"face.jpg"の読み込み
-    cv::Mat compImage = cv::imread("face.jpg", cv::IMREAD_COLOR);
+    cv::Mat compImage = cv::imread("./src/face.jpg", cv::IMREAD_COLOR);
     if (compImage.data==0) {
         printf("No image\n");
         exit(0);
