@@ -24,6 +24,7 @@ int main(int argc, const char* argv[])
     cv::Point2f center = cv::Point2f(sourceImage.cols/2, sourceImage.rows/2);  //回転中心
     double angle = -45.0;  //回転角度
     double scale = 1.0;  //拡大率
+    cv::Mat rotateMat = cv::getRotationMatrix2D(center, angle, scale); //行列生成
 
     //行列要素表示(確認用)
     printf("%f %f %f\n", rotateMat.at<double>(0, 0), rotateMat.at<double>(0, 1), rotateMat.at<double>(0, 2));
@@ -31,6 +32,7 @@ int main(int argc, const char* argv[])
     
     //⑤"sourceImage"に回転移動"rotateMat"を施して"translateImage"に張り付け
     //値が決定されない画素は黒で塗りつぶし．
+    cv::warpAffine(sourceImage, translateImage, rotateMat, translateImage.size(), cv::INTER_LINEAR, cv::BORDER_CONSTANT, cv::Scalar(0,0,0));
     
     //⑥"translateImage"の表示
     cv::imshow("Translate", translateImage);
