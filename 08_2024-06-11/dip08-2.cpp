@@ -7,7 +7,7 @@
 int main (int argc, char *argv[])
 {
     //ビデオキャプチャを初期化して，映像を取り込む
-    cv::VideoCapture capture("water1.mov");  //指定したビデオファイルをオープン
+    cv::VideoCapture capture("./src/water1.mov");  //指定したビデオファイルをオープン
     if (capture.isOpened()==0) {
         printf("Camera not found\n");
         return -1;
@@ -19,7 +19,7 @@ int main (int argc, char *argv[])
     cv::Size imageSize(width, height);  //フレームと同じ画像サイズ定義
 
     //船画像"face.jpg"の読み込み
-    cv::Mat shipImage = cv::imread("ship.jpg", cv::IMREAD_COLOR);
+    cv::Mat shipImage = cv::imread("./src/ship.jpg", cv::IMREAD_COLOR);
 
     //画像格納用インスタンス準備
     cv::Mat frameImage;
@@ -52,7 +52,7 @@ int main (int argc, char *argv[])
     priorFeature.push_back(cv::Point2f(width/2.0+20, height/2.0));
 
     //ビデオライタ生成(ファイル名，コーデック(mp4v/mov)，フレームレート，フレームサイズ)
-    //cv::VideoWriter rec("rec.mov", cv::VideoWriter::fourcc('m','p','4','v'), 30, cv::Size(width, height));
+    cv::VideoWriter rec("./dst/dip08_kadai2_k22047.mp4", cv::VideoWriter::fourcc('m','p','4','v'), 30, cv::Size(width, height));
 
     //動画像処理無限ループ
     int fid = 0;
