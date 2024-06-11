@@ -61,7 +61,9 @@ int main(int argc, char *argv[]) {
     }
 
     // ビデオライタ生成(ファイル名，コーデック(mp4v/mov)，フレームレート，フレームサイズ)
-    cv::VideoWriter rec("./dst/dip08_kadai2_k22047.mp4", cv::VideoWriter::fourcc('m', 'p', '4', 'v'), 30, cv::Size(width, height));
+    // cv::VideoWriter rec("./dst/dip08_kadai2_k22047.mp4", cv::VideoWriter::fourcc('m', 'p', '4', 'v'), 30, cv::Size(width, height));
+    // 解像度は480pに設定
+    cv::VideoWriter rec("./dst/dip08_kadai2_k22047.mov", cv::VideoWriter::fourcc('m', 'p', '4', 'v'), 30, cv::Size(640, 480));
 
     // オプティカルフロー用終了条件
     cv::TermCriteria criteria = cv::TermCriteria(cv::TermCriteria::MAX_ITER | cv::TermCriteria::EPS, 30, 0.01);
