@@ -127,7 +127,7 @@ int main(int argc, char *argv[]) {
                 if (status[i]) {
                     cv::Point pt1 = cv::Point(priorFeature[i]);  //前フレーム追跡点
                     cv::Point pt2 = cv::Point(presentFeature[i]);  //現フレーム対応点
-                    cv::line(frameImage, pt1, pt2, cv::Scalar(0, 0, 255), 2, 8);  //pt1とpt2を結ぶ直線を描画
+                    // cv::line(frameImage, pt1, pt2, cv::Scalar(0, 0, 255), 2, 8);  //pt1とpt2を結ぶ直線を描画
                 }
             }
         }
@@ -151,7 +151,7 @@ int main(int argc, char *argv[]) {
         cv::warpAffine(shipImage, rotatedShip, rotationMatrix, shipImage.size(), cv::INTER_LINEAR, cv::BORDER_CONSTANT, cv::Scalar(0, 0, 0));
 
         // 船の位置に円を表示
-        cv::circle(frameImage, shipPoint, 5, cv::Scalar(0, 255, 0), -1, 8);
+        // cv::circle(frameImage, shipPoint, 5, cv::Scalar(0, 255, 0), -1, 8);
 
         // 船画像の合成
         for (int y = 0; y < rotatedShip.rows; y++) {
