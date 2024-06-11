@@ -6,7 +6,7 @@ int main(int argc, const char* argv[])
 {
     //①画像ファイルの読み込み
     //画像ファイル"ferarri.jpg"を読み込んで，画像データ"sourceImage"に格納
-    cv::Mat sourceImage = cv::imread("ferarri.jpg", cv::IMREAD_COLOR);
+    cv::Mat sourceImage = cv::imread("./src/ferarri.jpg", cv::IMREAD_COLOR);
     if (sourceImage.data==0) {  //画像ファイルが読み込めなかった場合
         printf("File not found\n");
         exit(0);
