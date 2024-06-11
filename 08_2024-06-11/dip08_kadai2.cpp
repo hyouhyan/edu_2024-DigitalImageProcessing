@@ -1,6 +1,3 @@
-//(OpenCV4) g++ dip08_kadai2.cpp -std=c++11 `pkg-config --cflags --libs opencv4`
-//(OpenCV3) g++ dip08_kadai2.cpp `pkg-config --cflags --libs opencv`
-
 #include <iostream>  //入出力関連ヘッダ
 #include <opencv2/opencv.hpp>  //OpenCV関連ヘッダ
 #include <vector>
@@ -143,7 +140,10 @@ int main(int argc, char *argv[]) {
         }
 
         // 船の回転角度を計算
-        float angle = atan2(shipVelocity.y, shipVelocity.x) * 180 / CV_PI;
+        // 角度の範囲は[-45, 45]とする
+        float angle = std::atan2(shipVelocity.y, shipVelocity.x) * 180 / M_PI;
+        if (angle < -45) angle = -45;
+        if (angle > 45) angle = 45;
 
         // 船画像のアフィン変換行列を計算
         cv::Mat rotationMatrix = cv::getRotationMatrix2D(cv::Point2f(shipImage.cols / 2, shipImage.rows / 2), angle, 1.0);
