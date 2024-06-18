@@ -25,7 +25,7 @@ int main (int argc, char* argv[]) {
     cv::moveWindow("Edge", 100, 100);
 
     // 動画ファイル保存用のVideoWriterを準備
-    cv::VideoWriter outputVideo("./dst/output.mp4", 
+    cv::VideoWriter outputVideo("./dst/dip09_kadai1.mp4", 
                                 cv::VideoWriter::fourcc('h', '2', '6', '4'), 
                                 30, 
                                 imageSize);
