@@ -56,7 +56,7 @@ int main (int argc, char* argv[]) {
         cv::Canny(grayImage, edgeImage, 100, 200, 3); // ケニーのエッジ検出アルゴリズム
         
         // "grayImage"に円検出ハフ変換を施して，しきい値(90)以上の得票数を得た円群(cx, cy, r)を"circles"に格納
-        cv::HoughCircles(grayImage, circles, cv::HOUGH_GRADIENT, 1, 20, 60, 10, 12, 20);
+        cv::HoughCircles(grayImage, circles, cv::HOUGH_GRADIENT, 1, 30, 20, 15, 5, 15);
         
         // 検出された円の数("circles.size()")としきい値(200)の小さい方の数だけ繰り返し
         for (size_t i = 0; i < std::min(circles.size(), static_cast<size_t>(200)); i++) {
