@@ -9,7 +9,7 @@ g++ dip09.cpp `pkg-config --cflags --libs opencv`
 int main (int argc, char* argv[])
 {
     //①ビデオキャプチャの初期化
-    cv::VideoCapture capture("scene_ait.mov");  //ビデオファイルをオープン
+    cv::VideoCapture capture("./src/scene_ait.mov");  //ビデオファイルをオープン
     if (capture.isOpened()==0) {
         printf("Capture not found\n");
         return -1;
