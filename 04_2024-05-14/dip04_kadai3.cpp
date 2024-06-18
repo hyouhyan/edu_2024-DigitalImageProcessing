@@ -47,7 +47,7 @@ int main (int argc, const char* argv[])
     cv::namedWindow("Result");
     cv::moveWindow("Result", width, height);
     
-    cv::VideoWriter rec("rec.mp4", cv::VideoWriter::fourcc('M','P','4','V'), 30, recImage.size());
+    cv::VideoWriter rec("./dst/dip04_kadai3.mp4", cv::VideoWriter::fourcc('M','P','4','V'), 30, recImage.size());
     
     // 濃度パターンの生成
     unsigned char patterns[GRAY_LEVELS][PATTERN_SIZE][PATTERN_SIZE];
