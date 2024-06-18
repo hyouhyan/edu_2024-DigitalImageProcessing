@@ -1,8 +1,3 @@
-/*
-g++ dip09.cpp -std=c++11 `pkg-config --cflags --libs opencv4`
-g++ dip09.cpp `pkg-config --cflags --libs opencv`
- */
-
 #include <iostream>  //入出力関連ヘッダ
 #include <opencv2/opencv.hpp>  //OpenCV関連ヘッダ
 
@@ -55,7 +50,8 @@ int main (int argc, char* argv[])
         
         //(d)"edgeImage"に直線検出ハフ変換を施して，閾値(250)以上の投票数を得た直線群(ρ,θ)を"lines"に格納
         cv::HoughLines(edgeImage, lines, 1, M_PI/180, 250);
-
+        //(d')"grayImage"に円検出ハフ変換を施して，しきい値(90)以上の得票数を得た円群(x0,y0,r)を"circles"に格納
+        cv::HoughCircles(grayImage, circles, cv::HOUGH_GRADIENT, 1, 30, 20, 90, 30, 100);
         
         //(e)ハフ変換結果表示
         //検出された直線の数("lines.size()")と閾値(100)の小さい方の数だけ繰り返し
