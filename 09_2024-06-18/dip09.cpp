@@ -31,6 +31,7 @@ int main (int argc, char* argv[])
     cv::moveWindow("Edge", 100, 100);
     
     //④ハフ変換用変数
+    std::vector<cv::Point2f> lines; //ρ,θ の組で表現される直線群
 
     
     //⑤動画処理用無限ループ
@@ -49,13 +50,32 @@ int main (int argc, char* argv[])
         cv::cvtColor(frameImage, grayImage, cv::COLOR_BGR2GRAY);
         
         //(c)"grayImage"からエッジ画像"edgeImage"を生成
+        cv::Canny(grayImage, edgeImage, 120, 160, 3); //ケニーのエッジ検出アルゴリズム
 
         
         //(d)"edgeImage"に直線検出ハフ変換を施して，閾値(250)以上の投票数を得た直線群(ρ,θ)を"lines"に格納
+        cv::HoughLines(edgeImage, lines, 1, M_PI/180, 250);
 
         
         //(e)ハフ変換結果表示
         //検出された直線の数("lines.size()")と閾値(100)の小さい方の数だけ繰り返し
+        for (int i=0; i<MIN(lines.size(), 200); i++) {
+            //直線パラメータ：(ρ,θ) → 直線数式：a(x-x0)=b(y-y0) → 2 端点"p1"，"p2"を計算
+            cv::Point2f line = lines[i]; //"lines"から直線(ρ,θ)を 1 組取り出し
+            float rho = line.x; //"ρ"
+            float theta = line.y; //"θ"
+            double a = cos(theta); //"θ"から"a"を計算
+            double b = sin(theta); //"θ"から"b"を計算
+            double x0 = a * rho; //直線上の 1 点 p0(x0, y0)の"x0"を計算
+            double y0 = b * rho; //直線上の 1 点 p0(x0, y0)の"y0"を計算
+            cv::Point p1, p2; //直線描画用の端点"p1"，"p2"
+            p1.x = x0-1000*b; //"p1"の x 座標の計算
+            p1.y = y0+1000*a; //"p1"の y 座標の計算
+            p2.x = x0+1000*b; //"p2"の x 座標の計算
+            p2.y = y0-1000*a; //"p2"の y 座標の計算
+            //"p1"と"p2"を結ぶ線分を描画
+            cv::line(frameImage, p1, p2, cv::Scalar(0, 0, 255), 2, 8, 0);
+        }
 
         
         //(f)"frameImage"，"edgeImage"の表示
@@ -65,8 +85,7 @@ int main (int argc, char* argv[])
         //(g)キー入力待ち
         int key = cv::waitKey(10);
         //[Q]が押されたら無限ループ脱出
-        if (key=='q')
-            break;
+        if (key=='q') break;
     }
     
     //⑥終了処理
