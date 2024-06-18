@@ -6,7 +6,7 @@
 int main (int argc, char* argv[])
 {
     //①ビデオキャプチャの初期化
-    cv::VideoCapture capture("obj.mov");  //ビデオファイルをオープン
+    cv::VideoCapture capture("./src/obj.mov");  //ビデオファイルをオープン
     if (capture.isOpened()==0) {
         printf("Camera not found\n");
         return -1;
@@ -35,7 +35,7 @@ int main (int argc, char* argv[])
     cv::namedWindow("Output");
     cv::moveWindow("Output", 200, 200);
 
-    cv::VideoWriter rec("dip07_kadai3.mp4", cv::VideoWriter::fourcc('m', 'p', '4', 'v'), 30, cv::Size(720, 405));
+    cv::VideoWriter rec("./dst/dip07_kadai3.mp4", cv::VideoWriter::fourcc('m', 'p', '4', 'v'), 30, cv::Size(720, 405));
     
     //④動画処理用無限ループ
     while (1) {

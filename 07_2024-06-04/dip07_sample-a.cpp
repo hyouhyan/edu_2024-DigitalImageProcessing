@@ -6,7 +6,7 @@
 int main (int argc, char* argv[])
 {
     //①ビデオキャプチャの初期化
-    cv::VideoCapture capture("walking.mov");  //ビデオファイルをオープン
+    cv::VideoCapture capture("./src/walking.mov");  //ビデオファイルをオープン
     if (capture.isOpened()==0) {
         printf("Camera not found\n");
         return -1;

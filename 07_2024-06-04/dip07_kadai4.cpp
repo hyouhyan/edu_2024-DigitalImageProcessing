@@ -6,7 +6,7 @@
 int main (int argc, char * argv[])
 {
     //①ビデオキャプチャの初期化
-    cv::VideoCapture capture("room.mov");  //ビデオファイルをオープン
+    cv::VideoCapture capture("./src/room.mov");  //ビデオファイルをオープン
     //cv::VideoCapture capture(0);  //カメラをオープン
     if (capture.isOpened()==0) {
         printf("Camera not found\n");
@@ -36,7 +36,7 @@ int main (int argc, char * argv[])
     std::vector<unsigned char> status;  //作業用
     std::vector<float> errors;  //作業用
 
-    cv::VideoWriter rec("dip07_kadai4.mp4", cv::VideoWriter::fourcc('m', 'p', '4', 'v'), 30, cv::Size(720, 405));
+    cv::VideoWriter rec("./dst/dip07_kadai4.mp4", cv::VideoWriter::fourcc('m', 'p', '4', 'v'), 30, cv::Size(720, 405));
     
     //⑤動画表示用無限ループ
     while (1) {
