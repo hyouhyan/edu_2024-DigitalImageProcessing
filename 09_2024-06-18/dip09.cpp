@@ -32,7 +32,7 @@ int main (int argc, char* argv[])
     
     //④ハフ変換用変数
     std::vector<cv::Point2f> lines; //ρ,θ の組で表現される直線群
-
+    std::vector<cv::Point3f> circles; //(cx, cy)と r の組で表現される円群
     
     //⑤動画処理用無限ループ
     while (1) {
@@ -75,6 +75,16 @@ int main (int argc, char* argv[])
             p2.y = y0-1000*a; //"p2"の y 座標の計算
             //"p1"と"p2"を結ぶ線分を描画
             cv::line(frameImage, p1, p2, cv::Scalar(0, 0, 255), 2, 8, 0);
+        }
+
+        //(e')検出された円の数("circles.size()")としきい値(200)の小さい方の数だけ繰り返し
+        for (int i=0; i<MIN(circles.size(), 200); i++) {
+            cv::Point3f circle = circles[i]; //"circles"から円(x0, y0, r)を 1 組取り出し
+            float x0 = circle.x; //円の中心座標(x0, y0)の x 座標"x0"
+            float y0 = circle.y; //円の中心座標(x0, y0)の y 座標"y0"
+            float r = circle.z; //円の半径"r"
+            cv::circle(frameImage, cv::Point(x0,y0), 3, cv::Scalar(0,255,0), -1, 8, 0); //中心点の描画
+            cv::circle(frameImage, cv::Point(x0,y0), r, cv::Scalar(0,0,255), 2, 8, 0); //円の描画
         }
 
         
