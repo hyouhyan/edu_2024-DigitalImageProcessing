@@ -20,6 +20,7 @@ int main (int argc, char* argv[])
     cv::Mat frameImage(imageSize, CV_8UC3);  //3チャンネル
     cv::Mat grayImage(imageSize, CV_8UC1);  //1チャンネル
     cv::Mat edgeImage(imageSize, CV_8UC1);  //1チャンネル
+    cv::Mat binImage(imageSize, CV_8UC3);  //3チャンネル
     
     // 画像表示用ウィンドウの生成
     cv::namedWindow("Frame");
@@ -29,6 +30,11 @@ int main (int argc, char* argv[])
     
     // ハフ変換用変数
     std::vector<cv::Point2f> lines; //ρ,θ の組で表現される直線群
+
+    // ビデオライタ生成
+    // h264 でエンコード
+    cv::VideoWriter rec("./dst/dip09_kadai2.mp4", cv::VideoWriter::fourcc('h','2','6','4'), 20, frameImage.size());
+
     
     // 動画処理用無限ループ
     while (1) {
@@ -60,6 +66,10 @@ int main (int argc, char* argv[])
         
         // "edgeImage"に直線検出ハフ変換を施して，閾値(250)以上の投票数を得た直線群(ρ,θ)を"lines"に格納
         cv::HoughLines(edgeImage, lines, 1, M_PI/180, 250);
+
+        int count=0;
+        float theta2 = 0.0;
+        cv::Point2f center = cv::Point2f(frameImage.cols/2, frameImage.rows/2);
         
         // ハフ変換結果表示
         // 検出された直線の数("lines.size()")と閾値(100)の小さい方の数だけ繰り返し
@@ -77,9 +87,17 @@ int main (int argc, char* argv[])
             p1.y = y0+1000*a; // "p1"の y 座標の計算
             p2.x = x0+1000*b; // "p2"の x 座標の計算
             p2.y = y0-1000*a; // "p2"の y 座標の計算
+
+            theta = theta*180/M_PI-90;
+            theta2 += theta;
+            count++;
+
             // "p1"と"p2"を結ぶ線分を描画
             cv::line(frameImage, p1, p2, cv::Scalar(0, 0, 255), 2, 8, 0);
         }
+
+        cv::Mat rotateMat = cv::getRotationMatrix2D(center, theta2/count, 1.0);
+        cv::warpAffine(frameImage, frameImage, rotateMat, binImage.size(), cv::INTER_LINEAR, cv::BORDER_CONSTANT, cv::Scalar(0,0,0));
 
         
         // "frameImage"，"edgeImage"の表示
@@ -90,6 +108,8 @@ int main (int argc, char* argv[])
         int key = cv::waitKey(10);
         // [Q]が押されたら無限ループ脱出
         if (key=='q') break;
+
+        rec << frameImage;  //ビデオライタに画像出力
     }
     
     // 終了処理
