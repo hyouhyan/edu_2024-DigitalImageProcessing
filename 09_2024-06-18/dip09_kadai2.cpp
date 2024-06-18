@@ -4,7 +4,7 @@
 int main (int argc, char* argv[])
 {
     // ビデオキャプチャの初期化
-    cv::VideoCapture capture("./src/swingcar_reencoded.mp4");  //ビデオファイルをオープン
+    cv::VideoCapture capture("./src/swingcar.mov");  //ビデオファイルをオープン
     if (capture.isOpened()==0) {
         std::cerr << "Capture not found\n";
         return -1;
@@ -93,7 +93,7 @@ int main (int argc, char* argv[])
             count++;
 
             // "p1"と"p2"を結ぶ線分を描画
-            cv::line(frameImage, p1, p2, cv::Scalar(0, 0, 255), 2, 8, 0);
+            // cv::line(frameImage, p1, p2, cv::Scalar(0, 0, 255), 2, 8, 0);
         }
 
         cv::Mat rotateMat = cv::getRotationMatrix2D(center, theta2/count, 1.0);
