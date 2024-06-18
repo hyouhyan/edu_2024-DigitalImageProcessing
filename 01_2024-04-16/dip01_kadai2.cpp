@@ -3,7 +3,7 @@
 
 int main (int argc, const char* argv[])
 {
-    cv::Mat sourceImage = cv::imread("kadai01-2.png", cv::IMREAD_COLOR);
+    cv::Mat sourceImage = cv::imread("./src/kadai01-2.png", cv::IMREAD_COLOR);
     if (sourceImage.data==0) { //画像ファイルが読み込めなかった場合
         printf("File not found\n");
         exit(0);
