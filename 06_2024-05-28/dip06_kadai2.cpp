@@ -4,7 +4,7 @@
 
 int main(int argc, const char *argv[]) {
     // ①ルートディレクトリの画像ファイル"col.jpg"を読み込んで"sourceImage"に格納
-    cv::Mat sourceImage = cv::imread("kadai.jpg", cv::IMREAD_COLOR);
+    cv::Mat sourceImage = cv::imread("./src/kadai.jpg", cv::IMREAD_COLOR);
     if (sourceImage.data == 0) { // 画像ファイルが読み込めなかった場合
         printf("File not found\n");
         exit(0);
@@ -129,10 +129,10 @@ int main(int argc, const char *argv[]) {
     cv::imshow("Binary", binImage); // ウィンドウに画像を表示
 
     // 画像の出力
-    cv::imwrite("dip06_kadai2_result.jpg", contourImage);
+    cv::imwrite("./dst/dip06_kadai2_result.jpg", contourImage);
 
     // binImageの出力
-    cv::imwrite("dip06_kadai2_bin.jpg", binImage);
+    cv::imwrite("./dst/dip06_kadai2_bin.jpg", binImage);
 
     // ⑦キー入力があるまでここでストップ
     cv::waitKey(0);

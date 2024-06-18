@@ -4,7 +4,7 @@
 int main (int argc, const char * argv[])
 {
 	//①ルートディレクトリの画像ファイル"col.jpg"を読み込んで"sourceImage"に格納
-    cv::Mat sourceImage = cv::imread("col.jpg", cv::IMREAD_COLOR);
+    cv::Mat sourceImage = cv::imread("./src/col.jpg", cv::IMREAD_COLOR);
     if (sourceImage.data==0) {  //画像ファイルが読み込めなかった場合
         printf("File not found\n");
         exit(0);

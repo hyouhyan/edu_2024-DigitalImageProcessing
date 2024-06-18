@@ -4,7 +4,7 @@
 int main (int argc, const char * argv[])
 {
 	//ビデオファイル"movie.mov"を取り込み
-    cv::VideoCapture capture("movie.mov");  //指定したビデオファイルをオープン
+    cv::VideoCapture capture("./src/movie.mov");  //指定したビデオファイルをオープン
     //ビデオファイルがオープンできたかどうかをチェック
     if (capture.isOpened()==0) {
         printf("Specified video not found\n");

@@ -3,7 +3,7 @@
 
 int main (int argc, const char * argv[])
 {
-    cv::VideoCapture capture("movie.mov");
+    cv::VideoCapture capture("./src/movie.mov");
     if (capture.isOpened() == 0) {
         printf("Specified video not found\n");
         return -1;
@@ -25,7 +25,7 @@ int main (int argc, const char * argv[])
     std::vector<cv::Point> trajectory;
     // cv::VideoWriter rec("rec.avi", cv::VideoWriter::fourcc('M', 'J', 'P', 'G'), 30, cv::Size(width, height));
     //mp4形式で保存
-    cv::VideoWriter rec("dip06_kadai3.mp4", cv::VideoWriter::fourcc('m', 'p', '4', 'v'), 30, cv::Size(width, height));
+    cv::VideoWriter rec("./dst/dip06_kadai3.mp4", cv::VideoWriter::fourcc('m', 'p', '4', 'v'), 30, cv::Size(width, height));
     
     while (1) {
         capture >> frameImage;
