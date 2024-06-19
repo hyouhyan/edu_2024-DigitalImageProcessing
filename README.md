@@ -14,3 +14,12 @@
 │ └(素材データ)
 └(ソースコード)
 ```
+
+## VSCode Coderunner の設定
+```json
+{
+    "code-runner.executorMap": {
+        "cpp": "cd $dir && g++ $fileName -std=c++11 `pkg-config --cflags --libs opencv4` && ./a.out",
+    }
+}
+```
