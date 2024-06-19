@@ -26,12 +26,12 @@ int main(int argc, char* argv[]) {
     cv::Mat originalImage, frameImage(imageSize, CV_8UC3), grayImage(imageSize, CV_8UC1), edgeImage(imageSize, CV_8UC1);
     cv::Mat reticleImage;
 
-    cv::namedWindow("Frame");
-    cv::moveWindow("Frame", 0, 0);
     cv::namedWindow("Edge");
     cv::moveWindow("Edge", 100, 100);
     cv::namedWindow("Reticle");
     cv::moveWindow("Reticle", 200, 200);
+    cv::namedWindow("Frame");
+    cv::moveWindow("Frame", 0, 0);
 
     std::vector<cv::Vec2f> lines;
     
