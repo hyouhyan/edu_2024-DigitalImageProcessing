@@ -30,7 +30,13 @@ int main(int argc, char* argv[]) {
         cv::resize(originalImage, frameImage, imageSize);
         cv::cvtColor(frameImage, grayImage, cv::COLOR_BGR2GRAY);
         cv::Canny(grayImage, edgeImage, 120, 160, 3);
+
+        // 直線の検出
         cv::HoughLines(edgeImage, lines, 1, CV_PI / 180, 250);
+
+        // TODO: 閉じた空間(長方形)の検出
+
+        
 
 
         cv::imshow("Frame", frameImage);
