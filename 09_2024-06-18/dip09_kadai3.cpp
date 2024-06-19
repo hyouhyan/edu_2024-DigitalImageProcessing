@@ -35,13 +35,31 @@ int main(int argc, char* argv[]) {
 
     std::vector<cv::Vec2f> lines;
     
+    // ビデオライタ生成
+    // h264 でエンコード
+    cv::VideoWriter rec("./dst/dip09_kadai3.mp4", cv::VideoWriter::fourcc('m', 'p', '4', 'v'), 20, frameImage.size());
 
     while (true) {
         reticleImage = cv::Mat::zeros(imageSize, CV_8UC1);
         capture >> originalImage;
+
+        #ifdef DEBUG
         if (originalImage.empty()) {
             capture.set(cv::CAP_PROP_POS_FRAMES, 0);
             continue;
+        }
+        #endif
+
+        // フレームが正しく読み込まれたか確認
+        if (originalImage.empty()) {
+            std::cerr << "Failed to capture frame\n";
+            break;
+        }
+
+        // オリジナルのサイズが意図しない場合は、サイズの確認を行う
+        if (originalImage.size() != imageSize) {
+            std::cerr << "Frame size does not match the expected size\n";
+            continue; // サイズが違う場合は処理をスキップ
         }
 
         // 最終的な長方形の辺を入れる
@@ -198,6 +216,8 @@ int main(int argc, char* argv[]) {
 
         int key = cv::waitKey(10);
         if (key == 'q') break;
+
+        rec << frameImage;  //ビデオライタに画像出力
     }
 
     capture.release();
