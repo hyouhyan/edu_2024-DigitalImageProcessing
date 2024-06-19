@@ -32,11 +32,28 @@ int main(int argc, char* argv[]) {
         cv::Canny(grayImage, edgeImage, 120, 160, 3);
 
         // 直線の検出
-        cv::HoughLines(edgeImage, lines, 1, CV_PI / 180, 250);
+        cv::HoughLines(edgeImage, lines, 1, CV_PI / 180, 60);
 
-        // TODO: 閉じた空間(長方形)の検出
+        // 極めて隣接した直線を複数検出しないようにする
+        std::vector<cv::Vec2f> uniqueLines;
+        for (int i = 0; i < lines.size(); i++) {
+            cv::Vec2f line = lines[i];
+            float rho = line[0], theta = line[1];
+            bool isUnique = true;
+            for (int j = 0; j < uniqueLines.size(); j++) {
+                cv::Vec2f uniqueLine = uniqueLines[j];
+                float uniqueRho = uniqueLine[0], uniqueTheta = uniqueLine[1];
+                if (std::abs(rho - uniqueRho) < 20 && std::abs(theta - uniqueTheta) < CV_PI / 180 * 20) {
+                    isUnique = false;
+                    break;
+                }
+            }
+            if (isUnique) uniqueLines.push_back(line);
+        }
 
         
+
+
 
 
         cv::imshow("Frame", frameImage);
