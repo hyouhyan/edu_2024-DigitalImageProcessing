@@ -2,6 +2,8 @@
 #include <opencv2/opencv.hpp>
 #include <cmath>
 
+// #define DEBUG
+
 bool isParallel(float theta1, float theta2, float angleThreshold = CV_PI / 180 * 10) {
     return std::abs(theta1 - theta2) < angleThreshold || std::abs(theta1 - theta2 - CV_PI) < angleThreshold;
 }
@@ -29,6 +31,7 @@ int main(int argc, char* argv[]) {
     cv::moveWindow("Edge", 100, 100);
 
     std::vector<cv::Vec2f> lines;
+    
 
     while (true) {
         capture >> originalImage;
@@ -36,6 +39,9 @@ int main(int argc, char* argv[]) {
             capture.set(cv::CAP_PROP_POS_FRAMES, 0);
             continue;
         }
+
+        // 最終的な長方形の辺を入れる
+        std::vector<cv::Vec2f> rectangleLines;
 
         cv::resize(originalImage, frameImage, imageSize);
         cv::cvtColor(frameImage, grayImage, cv::COLOR_BGR2GRAY);
@@ -90,7 +96,13 @@ int main(int argc, char* argv[]) {
                 double x0 = a * rho, y0 = b * rho;
                 cv::Point pt1(cvRound(x0 + 1000 * (-b)), cvRound(y0 + 1000 * a));
                 cv::Point pt2(cvRound(x0 - 1000 * (-b)), cvRound(y0 - 1000 * a));
+
+                #ifdef DEBUG
                 cv::line(frameImage, pt1, pt2, cv::Scalar(0, 255, 0), 2, cv::LINE_AA);
+                #endif
+
+                // 長方形の辺を保存
+                rectangleLines.push_back(line);
             }
         }
 
@@ -125,7 +137,30 @@ int main(int argc, char* argv[]) {
                 double x0 = a * rho, y0 = b * rho;
                 cv::Point pt1(cvRound(x0 + 1000 * (-b)), cvRound(y0 + 1000 * a));
                 cv::Point pt2(cvRound(x0 - 1000 * (-b)), cvRound(y0 - 1000 * a));
+
+                #ifdef DEBUG
                 cv::line(frameImage, pt1, pt2, cv::Scalar(255, 0, 0), 2, cv::LINE_AA);
+                #endif
+
+                // 長方形の辺を保存
+                rectangleLines.push_back(line);
+            }
+        }
+
+        // 長方形の頂点(rectangleLinesの交点)を描画
+        if (rectangleLines.size() >= 4) {
+            for (int i = 0; i < rectangleLines.size(); i++) {
+                for (int j = i + 1; j < rectangleLines.size(); j++) {
+                    float rho1 = rectangleLines[i][0], theta1 = rectangleLines[i][1];
+                    float rho2 = rectangleLines[j][0], theta2 = rectangleLines[j][1];
+                    double a1 = cos(theta1), b1 = sin(theta1);
+                    double a2 = cos(theta2), b2 = sin(theta2);
+                    double d = a1 * b2 - a2 * b1;
+                    if (std::abs(d) < 1e-6) continue;
+                    double x = (b2 * rho1 - b1 * rho2) / d;
+                    double y = (a1 * rho2 - a2 * rho1) / d;
+                    cv::circle(frameImage, cv::Point(cvRound(x), cvRound(y)), 10, cv::Scalar(0, 255, 0), -1);
+                }
             }
         }
 
