@@ -37,7 +37,7 @@ int main(int argc, char* argv[]) {
     
     // ビデオライタ生成
     // h264 でエンコード
-    cv::VideoWriter rec("./dst/dip09_kadai3.mp4", cv::VideoWriter::fourcc('m', 'p', '4', 'v'), 20, frameImage.size());
+    cv::VideoWriter rec("./dst/dip09_kadai3.mp4", cv::VideoWriter::fourcc('a', 'v', 'c', '1'), 20, frameImage.size());
 
     while (true) {
         reticleImage = cv::Mat::zeros(imageSize, CV_8UC1);
