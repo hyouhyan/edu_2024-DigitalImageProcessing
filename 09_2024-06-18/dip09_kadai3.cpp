@@ -24,16 +24,20 @@ int main(int argc, char* argv[]) {
     int h = capture.get(cv::CAP_PROP_FRAME_HEIGHT);
     cv::Size imageSize(w, h);
     cv::Mat originalImage, frameImage(imageSize, CV_8UC3), grayImage(imageSize, CV_8UC1), edgeImage(imageSize, CV_8UC1);
+    cv::Mat reticleImage;
 
     cv::namedWindow("Frame");
     cv::moveWindow("Frame", 0, 0);
     cv::namedWindow("Edge");
     cv::moveWindow("Edge", 100, 100);
+    cv::namedWindow("Reticle");
+    cv::moveWindow("Reticle", 200, 200);
 
     std::vector<cv::Vec2f> lines;
     
 
     while (true) {
+        reticleImage = cv::Mat::zeros(imageSize, CV_8UC1);
         capture >> originalImage;
         if (originalImage.empty()) {
             capture.set(cv::CAP_PROP_POS_FRAMES, 0);
@@ -163,15 +167,34 @@ int main(int argc, char* argv[]) {
                     double y = (a1 * rho2 - a2 * rho1) / d;
                     cv::Point point(cvRound(x), cvRound(y));
                     cv::circle(frameImage, point, 10, cv::Scalar(0, 255, 0), -1);
+                    cv::circle(reticleImage, point, 10, cv::Scalar(255), -1);
 
                     rectanglePoints.push_back(point);
                 }
             }
         }
 
+        //reticleImageの輪郭を抽出
+        std::vector<std::vector<cv::Point>> contours;
+        std::vector<cv::Vec4i> hierarchy;
+        cv::findContours(reticleImage, contours, hierarchy, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+
+        // 各輪郭の中心同士を直線で結ぶ
+        for (int i = 0; i < contours.size(); i++) {
+            for (int j = i + 1; j < contours.size(); j++) {
+                cv::Moments moments1 = cv::moments(contours[i]);
+                cv::Moments moments2 = cv::moments(contours[j]);
+                cv::Point center1(moments1.m10 / moments1.m00, moments1.m01 / moments1.m00);
+                cv::Point center2(moments2.m10 / moments2.m00, moments2.m01 / moments2.m00);
+                cv::line(frameImage, center1, center2, cv::Scalar(0, 0, 255), 2, cv::LINE_AA);
+            }
+        }
+
+
 
         cv::imshow("Frame", frameImage);
         cv::imshow("Edge", edgeImage);
+        cv::imshow("Reticle", reticleImage);
 
         int key = cv::waitKey(10);
         if (key == 'q') break;
