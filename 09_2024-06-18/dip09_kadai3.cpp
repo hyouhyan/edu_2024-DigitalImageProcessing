@@ -147,7 +147,9 @@ int main(int argc, char* argv[]) {
             }
         }
 
+
         // 長方形の頂点(rectangleLinesの交点)を描画
+        std::vector<cv::Point> rectanglePoints;
         if (rectangleLines.size() >= 4) {
             for (int i = 0; i < rectangleLines.size(); i++) {
                 for (int j = i + 1; j < rectangleLines.size(); j++) {
@@ -159,10 +161,14 @@ int main(int argc, char* argv[]) {
                     if (std::abs(d) < 1e-6) continue;
                     double x = (b2 * rho1 - b1 * rho2) / d;
                     double y = (a1 * rho2 - a2 * rho1) / d;
-                    cv::circle(frameImage, cv::Point(cvRound(x), cvRound(y)), 10, cv::Scalar(0, 255, 0), -1);
+                    cv::Point point(cvRound(x), cvRound(y));
+                    cv::circle(frameImage, point, 10, cv::Scalar(0, 255, 0), -1);
+
+                    rectanglePoints.push_back(point);
                 }
             }
         }
+
 
         cv::imshow("Frame", frameImage);
         cv::imshow("Edge", edgeImage);
