@@ -8,7 +8,7 @@ void ShiftDFT(const cv::Mat& src_arr, cv::Mat& dst_arr);
 int main(int argc, const char* argv[])
 {
     //①原画像のグレースケール画像を"sourceImg"に格納
-    cv::Mat sourceImg = cv::imread("nymegami.jpg", cv::IMREAD_GRAYSCALE);
+    cv::Mat sourceImg = cv::imread("./src/nymegami.jpg", cv::IMREAD_GRAYSCALE);
     if (sourceImg.data==0) { //ファイルが見つからないときはメッセージを表示して終了
         printf("Source not found\n");
         exit(0);
