@@ -20,7 +20,7 @@ int main(int argc, const char* argv[])
     // ビデオライターの初期化
     int frame_width = static_cast<int>(cap.get(cv::CAP_PROP_FRAME_WIDTH));
     int frame_height = static_cast<int>(cap.get(cv::CAP_PROP_FRAME_HEIGHT));
-    cv::VideoWriter video("output.avi", cv::VideoWriter::fourcc('M', 'J', 'P', 'G'), 10, cv::Size(frame_width, frame_height), false);
+    cv::VideoWriter video("dip10_kadai2.avi", cv::VideoWriter::fourcc('M', 'J', 'P', 'G'), 10, cv::Size(frame_width, frame_height), false);
 
     // フレーム処理ループ
     int frameCount = 0;
