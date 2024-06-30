@@ -13,6 +13,7 @@ int main(int argc, const char* argv[])
 {
     // 画像の読み込み
     cv::Mat sourceImg = cv::imread("./src/nymegami.jpg", cv::IMREAD_GRAYSCALE);
+    // cv::Mat sourceImg = cv::imread("./src/lenna_g.jpg", cv::IMREAD_GRAYSCALE);
     if (sourceImg.empty()) {
         std::cerr << "Error loading image" << std::endl;
         return -1;
