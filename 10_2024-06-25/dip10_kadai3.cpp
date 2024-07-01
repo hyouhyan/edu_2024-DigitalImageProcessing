@@ -64,7 +64,7 @@ int main(int argc, const char* argv[]){
     cv::imwrite("./dst/dip10_kadai3/highpass_spatial.jpg", spcImg);
 
     // ハイパスフィルタには2値化処理を行う
-    cv::threshold(resultImg, resultImg, 110, 255, cv::THRESH_BINARY_INV);
+    cv::threshold(resultImg, resultImg, 100, 255, cv::THRESH_BINARY);
 
     cv::imwrite("./dst/dip10_kadai3/highpass_result.jpg", resultImg);
 
