@@ -61,8 +61,48 @@ int main(int argc, const char* argv[]){
     cv::idft(ftMatrix, cxMatrix);
     cv::split(cxMatrix, imgMatrix);
     cv::normalize(imgMatrix[0], resultImg, 0, 255, cv::NORM_MINMAX, CV_8U);
-    cv::imwrite("./dst/dip10_kadai3/spatial.jpg", spcImg);
-    cv::imwrite("./dst/dip10_kadai3/result.jpg", resultImg);
+    cv::imwrite("./dst/dip10_kadai3/highpass_spatial.jpg", spcImg);
+
+    // ハイパスフィルタには2値化処理を行う
+    cv::threshold(resultImg, resultImg, 110, 255, cv::THRESH_BINARY_INV);
+
+    cv::imwrite("./dst/dip10_kadai3/highpass_result.jpg", resultImg);
+
+
+    // ローパスフィルタ
+
+    // フーリエ変換
+    cv::dft(cxMatrix, ftMatrix);
+    ShiftDFT(ftMatrix, ftMatrix);
+
+    sigma = 0.008;  // ガウシアンフィルタの標準偏差
+    center2 = cv::Point(ftMatrix.cols / 2, ftMatrix.rows / 2);
+    for (int i = 0; i < ftMatrix.rows; ++i) {
+        for (int j = 0; j < ftMatrix.cols; ++j) {
+            double radius = std::pow(j - center2.x, 2.0) + std::pow(i - center2.y, 2.0);
+            // double weight =  std::exp(-2.0 * M_PI * M_PI * std::pow(radius, 2.0) / (2.0 * std::pow(sigma, 2.0)));
+            double weight =  std::exp(-2.0 * M_PI * M_PI * std::pow(sigma, 2.0) * radius);
+            ftMatrix.at<cv::Vec2d>(i, j)[0] *= weight;
+            ftMatrix.at<cv::Vec2d>(i, j)[1] *= weight;
+        }
+    }
+
+    // フーリエスペクトル"spcMatrix"の計算
+    cv::split(ftMatrix, imgMatrix);
+    cv::magnitude(imgMatrix[0], imgMatrix[1], spcMatrix);
+
+    // フーリエスペクトルからフーリエスペクトル画像を生成
+    spcMatrix += cv::Scalar::all(1);
+    cv::log(spcMatrix, spcMatrix);
+    cv::normalize(spcMatrix, spcImg, 0, 255, cv::NORM_MINMAX, CV_8U);
+
+    // フーリエ逆変換
+    ShiftDFT(ftMatrix, ftMatrix);
+    cv::idft(ftMatrix, cxMatrix);
+    cv::split(cxMatrix, imgMatrix);
+    cv::normalize(imgMatrix[0], resultImg, 0, 255, cv::NORM_MINMAX, CV_8U);
+    cv::imwrite("./dst/dip10_kadai3/lowpass_spatial.jpg", spcImg);
+    cv::imwrite("./dst/dip10_kadai3/lowpass_result.jpg", resultImg);
 
 
     return 0;
