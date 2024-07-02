@@ -5,7 +5,7 @@
 int main (int argc, char* argv[])
 {
     //①ビデオキャプチャの初期化
-    cv::VideoCapture capture(1);  //カメラ0番をオープン
+    cv::VideoCapture capture(0);  //カメラ0番をオープン
     if (capture.isOpened()==0) {  //オープンに失敗した場合
         printf("Capture not found\n");
         return -1;
