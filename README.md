@@ -65,7 +65,7 @@
 ```json
 {
     "code-runner.executorMap": {
-        "cpp": "cd $dir && g++ $fileName -std=c++11 `pkg-config --cflags --libs opencv4` && ./a.out",
+        "cpp": "cd $dir && g++ $fileName -framework OpenGL -framework GLUT -Wno-deprecated -std=c++11 `pkg-config --cflags --libs opencv4` && ./a.out",
     }
 }
 ```
