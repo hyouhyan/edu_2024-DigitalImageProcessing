@@ -34,7 +34,7 @@ void initGL() {
     glEnable(GL_NORMALIZE);
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
-    GLfloat col[4] = {0.9, 0.9, 0.9, 1.0};
+    GLfloat col[4] = {223/255.0, 132/255.0, 2/255.0, 1.0};
     glLightfv(GL_LIGHT0, GL_DIFFUSE, col);
     glLightfv(GL_LIGHT0, GL_SPECULAR, col);
     col[0] = 0.9; col[1] = 0.9; col[2] = 0.9; col[3] = 1.0;
