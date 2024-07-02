@@ -6,10 +6,14 @@
 
 // グローバル変数
 cv::VideoCapture capture;
-cv::Mat frameImage;
 int rows = 24, cols = 32;
 int winW, winH;
 float angles[24][32];
+
+int imageWidth=720, imageHeight=405;
+cv::Size imageSize(imageWidth, imageHeight);  //画像サイズ
+cv::Mat originalImage;  //ビデオキャプチャ用
+cv::Mat frameImage(imageSize, CV_8UC3);  //3チャンネル
 
 // OpenCV初期化
 void initCV() {
@@ -69,8 +73,13 @@ void displayGL() {
 
 // OpenCVのフレームを取得し角度を計算
 void updateAngles() {
-    capture >> frameImage;
+    capture >> originalImage;
     if (frameImage.empty()) return;
+
+    cv::resize(originalImage, frameImage, imageSize);
+
+    // OpenCVウィンドウに表示
+    cv::imshow("Camera", frameImage);
 
     //フレームを上下反転
     cv::flip(frameImage, frameImage, 0);
@@ -115,6 +124,8 @@ int main(int argc, char** argv) {
     glutInit(&argc, argv);
     initCV();
     initGL();
+
+    cv::namedWindow("Camera");
     
     glutDisplayFunc(displayGL);
     glutReshapeFunc(reshape);
