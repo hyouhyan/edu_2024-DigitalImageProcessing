@@ -4,11 +4,17 @@
 #include <vector>
 
 // グローバル変数
-cv::VideoCapture capture;
-cv::Mat frameImage;
 int winW, winH;
 bool lightOn = false;
 GLfloat lightPos[4] = {0.0, 0.0, 0.0, 1.0};  // 光源の位置
+
+// OpenCV関連 グローバス変数
+cv::VideoCapture capture(0);
+
+int imageWidth=720, imageHeight=405;
+cv::Size imageSize(imageWidth, imageHeight);  //画像サイズ
+cv::Mat originalImage;  //ビデオキャプチャ用
+cv::Mat frameImage(imageSize, CV_8UC3);  //3チャンネル
 
 struct Box {
     float x, y, z;
@@ -77,8 +83,11 @@ void displayGL() {
 
 // OpenCVのフレームを取得し、光源を検出
 void updateLight() {
-    capture >> frameImage;
+    capture >> originalImage;
     if (frameImage.empty()) return;
+
+    cv::resize(originalImage, frameImage, imageSize);
+    cv::imshow("Frame", frameImage);
 
     cv::flip(frameImage, frameImage, 1);  // 左右反転
     cv::cvtColor(frameImage, frameImage, cv::COLOR_BGR2GRAY);
