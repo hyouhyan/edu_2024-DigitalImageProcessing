@@ -107,6 +107,9 @@ void display()
     //(b)"frameImage"の表示
     cv::imshow("Frame", frameImage);
 
+    //画像中心の画素値取得
+    cv::Vec3b s = frameImage.at<cv::Vec3b>(imageHeight/2, imageWidth/2);
+
     GLfloat col[4];  //色設定用
     
     //ウィンドウ内消去
@@ -129,7 +132,7 @@ void display()
     
     //--------------------直方体--------------------
     //色設定
-    col[0] = 0.5; col[1] = 1.0; col[2] = 0.5;
+    col[0] = s[2]/255.0; col[1] = s[1]/255.0; col[2] = s[0]/255.0;
     glMaterialfv(GL_FRONT, GL_DIFFUSE, col);  //拡散反射係数
     glMaterialfv(GL_FRONT, GL_AMBIENT, col);  //環境光反射係数
     col[0] = 0.5; col[1] = 0.5; col[2] = 0.5; col[3] = 1.0;
