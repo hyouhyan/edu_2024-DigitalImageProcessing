@@ -100,20 +100,12 @@ void display()
     //(a)ビデオキャプチャから1フレーム"originalImage"を取り込んで，"frameImage"を生成
     capture >> originalImage;
     //ビデオが終了したら無限ループから脱出
-    // if (originalImage.data==NULL) {
-    //     break;
-    // }
+    if (originalImage.data==NULL) exit(0);
     //"originalImage"をリサイズして"frameImage"生成
     cv::resize(originalImage, frameImage, imageSize);
     
     //(b)"frameImage"の表示
     cv::imshow("Frame", frameImage);
-
-    //(c)キー入力待ち
-    int key = cv::waitKey(10);
-    //[Q]が押されたら無限ループ脱出
-    // if (key=='q')
-    //     break;
 
     GLfloat col[4];  //色設定用
     
