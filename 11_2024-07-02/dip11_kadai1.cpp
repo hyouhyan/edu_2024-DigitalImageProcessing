@@ -41,7 +41,7 @@ void initGL() {
 void displayGL() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
-    gluLookAt(0.0, 0.0, 2000.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+    gluLookAt(0.0, 0.0, 1000.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
     
     GLfloat pos0[] = {0.0, 0.0, 2000.0, 1.0};
     glLightfv(GL_LIGHT0, GL_POSITION, pos0);
@@ -71,6 +71,9 @@ void displayGL() {
 void updateAngles() {
     capture >> frameImage;
     if (frameImage.empty()) return;
+
+    //フレームを上下反転
+    cv::flip(frameImage, frameImage, 0);
     
     cv::resize(frameImage, frameImage, cv::Size(cols, rows));
     cv::cvtColor(frameImage, frameImage, cv::COLOR_BGR2GRAY);
