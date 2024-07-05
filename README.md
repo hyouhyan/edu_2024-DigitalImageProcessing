@@ -1,7 +1,7 @@
 # edu_2024-DigitalImageProcessing
 2024年度 前期 ディジタル映像処理及び演習 の授業で作成したプログラムたち。
 
-## 仕様てきな
+## 仕様
 - 言語: C++
 - 使用ライブラリ: OpenCV, OpenGL
 
@@ -77,7 +77,7 @@
 
 引用元: 愛知工業大学「シラバス検索」(https://syllabus.aitech.ac.jp/ext_syllabus/)
 
-# 環境設定てきな
+# 環境設定
 ## VSCode Coderunner の設定
 ```json
 {
