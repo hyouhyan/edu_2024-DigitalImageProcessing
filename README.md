@@ -60,6 +60,20 @@
 
 引用元: 愛知工業大学「シラバス検索」(https://syllabus.aitech.ac.jp/ext_syllabus/)
 
+## 授業トピック一覧
+
+<details>
+    <summary>クリックで表示</summary>
+
+1. ディジタル画像の基礎知識
+2. 画素単位の画像の読み書き
+3. 動画像の取り扱いと基本的な処理
+4. 画像の濃度値変換
+5. 空間フィルタ
+6. 2値画像処理
+7. 動画からの
+</details>
+
 # 環境設定てきな
 ## VSCode Coderunner の設定
 ```json
