@@ -44,9 +44,9 @@ void initGL() {
     // 20個の直方体をランダムに配置
     for (int i = 0; i < 20; ++i) {
         Box box;
-        box.x = (rand() % 1000) - 500;
-        box.y = (rand() % 1000) - 500;
-        box.z = (rand() % 1000) - 500;
+        box.x = (rand() % 500) - 250;
+        box.y = (rand() % 500) - 250;
+        box.z = (rand() % 500) - 250;
         box.sizeX = (rand() % 100) + 50;
         box.sizeY = (rand() % 100) + 50;
         box.sizeZ = (rand() % 100) + 50;
@@ -73,7 +73,7 @@ void displayGL() {
         glPushMatrix();
         glTranslatef(box.x, box.y, box.z);
         glScalef(box.sizeX, box.sizeY, box.sizeZ);
-        glColor3f(0.5f, 0.3f, 0.2f);
+        glColor3f(0.0f, 0.0f, 0.0f);
         glutSolidCube(1.0);
         glPopMatrix();
     }
@@ -90,6 +90,7 @@ void updateLight() {
     cv::imshow("Frame", frameImage);
 
     cv::flip(frameImage, frameImage, 1);  // 左右反転
+    cv::flip(frameImage, frameImage, 0);  // 上下反転
     cv::cvtColor(frameImage, frameImage, cv::COLOR_BGR2GRAY);
     cv::threshold(frameImage, frameImage, 200, 255, cv::THRESH_BINARY);
     
