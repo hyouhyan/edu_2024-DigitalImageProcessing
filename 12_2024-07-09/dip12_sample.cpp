@@ -1,6 +1,3 @@
-/*
- g++ -std=c++11 dip12.cpp `pkg-config --cflags --libs opencv4`
- */
 #include <iostream>  //入出力関連ヘッダ
 #include <opencv2/opencv.hpp>  //OpenCV関連ヘッダ
 
@@ -34,7 +31,7 @@ int main(int argc, char* argv[])
 {
     //OpenCV初期設定処理
     //カメラキャプチャの初期化
-    cv::VideoCapture capture = cv::VideoCapture(0);
+    cv::VideoCapture capture("./src/face.mov");
     if (capture.isOpened()==0) {
         //カメラが見つからないときはメッセージを表示して終了
         printf("Camera not found\n");
@@ -56,11 +53,19 @@ int main(int argc, char* argv[])
     cv::moveWindow("Face", imageSize.width, 0);
 
     // ①正面顔検出器の読み込み
-    faceClassifier.load("haarcascades/haarcascade_frontalface_default.xml");
+    faceClassifier.load("./src/haarcascades/haarcascade_frontalface_default.xml");
     
     while(1){
         //ビデオキャプチャから1フレーム画像取得
         capture >> originalImage;
+        
+        //ビデオが終了したら巻き戻し
+
+        if(originalImage.data==NULL) {
+            capture.set(cv::CAP_PROP_POS_FRAMES, 0);
+            continue;
+        }
+
         cv::resize(originalImage, frameImage, imageSize);
 
         //フレーム画像表示
