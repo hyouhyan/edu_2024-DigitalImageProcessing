@@ -57,7 +57,7 @@ int main(int argc, char* argv[])
     faceClassifier.load("./src/haarcascades/haarcascade_frontalface_default.xml");
 
     // 眼検出器の読み込み
-    eyeClassifier.load("./src/haarcascades/haarcascade_mcs_eyepair_small.xml");
+    eyeClassifier.load("./src/haarcascades/haarcascade_mcs_eyepair_big.xml");
     
     while(1){
         //ビデオキャプチャから1フレーム画像取得
@@ -111,7 +111,7 @@ int main(int argc, char* argv[])
                 cv::Point(eye.x, eye.y),
                 cv::Point(eye.x + eye.width, eye.y + eye.height),
                 CV_RGB(0, 255, 0),
-                3, CV_AA
+                3, cv::LINE_AA
             );
         }
 
