@@ -18,8 +18,8 @@ void change_face_color(cv::Mat& faceImage, cv::Mat& hsvImage, cv::Rect rect)
 			hsvImage.at<cv::Vec3b>(j, 2*rect.x+rect.width-i) = s;
             // 肌色領域のみ変換
             if(s[0]> 0 && s[0]< 45 &&
-               s[1]>50 && s[1]<255 &&
-               s[2]>50 && s[2]<255)
+                s[1]>50 && s[1]<255 &&
+                s[2]>50 && s[2]<255)
             {
                 s[0] = 120;
                 hsvImage.at<cv::Vec3b>(j, i) = s;
@@ -86,10 +86,10 @@ int main(int argc, char* argv[])
             
             // 取得した顔の位置情報に基づき、矩形描画を行う
             cv::rectangle(frameImage,
-                              cv::Point(face.x, face.y),
-                              cv::Point(face.x + face.width, face.y + face.height),
-                              CV_RGB(255, 0, 0),
-                              3, cv::LINE_AA);
+                cv::Point(face.x, face.y),
+                cv::Point(face.x + face.width, face.y + face.height),
+                CV_RGB(255, 0, 0),
+                3, cv::LINE_AA);
             }
         
         //認識結果画像表示
