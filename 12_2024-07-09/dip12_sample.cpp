@@ -41,6 +41,7 @@ int main(int argc, char* argv[])
     cv::Mat originalImage, frameImage, hsvImage, tempImage;
     cv::Size imageSize(720, 405);  // 画像サイズ
     cv::CascadeClassifier faceClassifier;  // 顔認識用分類器
+    cv::CascadeClassifier eyeClassifier;  // 目認識用分類器
 
     //3チャンネル画像"hsvImage"と"tempImage"の確保（ビデオと同サイズ）
     hsvImage = cv::Mat(imageSize, CV_8UC3);
@@ -54,6 +55,9 @@ int main(int argc, char* argv[])
 
     // ①正面顔検出器の読み込み
     faceClassifier.load("./src/haarcascades/haarcascade_frontalface_default.xml");
+
+    // 眼検出器の読み込み
+    eyeClassifier.load("./src/haarcascades/haarcascade_mcs_eyepair_small.xml");
     
     while(1){
         //ビデオキャプチャから1フレーム画像取得
@@ -72,10 +76,11 @@ int main(int argc, char* argv[])
         cv::imshow("Frame", frameImage);
 
         // ②検出情報を受け取るための配列を用意する
-        std::vector<cv::Rect> faces;
+        std::vector<cv::Rect> faces, eyes;
 
         // ③画像中から検出対象の情報を取得する
         faceClassifier.detectMultiScale(frameImage, faces, 1.1, 3, 0, cv::Size(20,20));
+        eyeClassifier.detectMultiScale(frameImage, eyes, 1.1, 3, 0, cv::Size(10,10));
 
         // ④顔領域の検出
         for (int i = 0; i < faces.size(); i++) {
@@ -87,7 +92,7 @@ int main(int argc, char* argv[])
             }
             
             // ⑤画像の加工
-    //        change_face_color(frameImage, hsvImage, face);
+            // change_face_color(frameImage, hsvImage, face);
             
             // 取得した顔の位置情報に基づき、矩形描画を行う
             cv::rectangle(frameImage,
@@ -95,7 +100,22 @@ int main(int argc, char* argv[])
                 cv::Point(face.x + face.width, face.y + face.height),
                 CV_RGB(255, 0, 0),
                 3, cv::LINE_AA);
-            }
+        }
+
+        // 眼領域の検出
+        for (int i = 0; i < eyes.size(); i++) {
+            // 検出情報から顔の位置情報を取得
+            cv::Rect eye = eyes[i];
+            // 取得した顔の位置情報に基づき、矩形描画を行う
+            cv::rectangle(frameImage,
+                cv::Point(eye.x, eye.y),
+                cv::Point(eye.x + eye.width, eye.y + eye.height),
+                CV_RGB(0, 255, 0),
+                3, CV_AA
+            );
+        }
+
+
         
         //認識結果画像表示
         cv::imshow("Face", frameImage);
