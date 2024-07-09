@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
 {
     //OpenCV初期設定処理
     //カメラキャプチャの初期化
-    cv::VideoCapture capture("./src/face.mov");
+    cv::VideoCapture capture("./src/face_kadai4.mov");
     if (capture.isOpened()==0) {
         //カメラが見つからないときはメッセージを表示して終了
         printf("Camera not found\n");
@@ -52,6 +52,7 @@ int main(int argc, char* argv[])
     cv::moveWindow("Frame", 0, 0);
     cv::namedWindow("Face");
     cv::moveWindow("Face", imageSize.width, 0);
+    cv::namedWindow("usamimiImage");
 
     // ①正面顔検出器の読み込み
     faceClassifier.load("./src/haarcascades/haarcascade_frontalface_default.xml");
@@ -60,9 +61,7 @@ int main(int argc, char* argv[])
     eyeClassifier.load("./src/haarcascades/haarcascade_mcs_eyepair_big.xml");
 
     // うさみみ画像の読み込み
-    cv::Mat usamimiImage = cv::imread("./src/うさミミ.jpg", cv::IMREAD_UNCHANGED);
-
-
+    cv::Mat usamimiImage = cv::imread("./src/うさミミ.jpg");
     
     while(1){
         //ビデオキャプチャから1フレーム画像取得
@@ -96,40 +95,18 @@ int main(int argc, char* argv[])
                 continue; // 小さい矩形は採用しない
             }
             
-            
-            // 取得した顔の位置情報に基づき、矩形描画を行う
-            cv::rectangle(frameImage,
-                cv::Point(face.x, face.y),
-                cv::Point(face.x + face.width, face.y + face.height),
-                CV_RGB(255, 0, 0),
-                3, cv::LINE_AA);
-            
-            // 顔の大きさに応じて、顔上部にうさみみを合成(白い部分は透過)
-            cv::resize(usamimiImage, tempImage, cv::Size(face.width, face.height/2));
-            for(int j=0; j<tempImage.rows; j++) {
-                for(int i=0; i<tempImage.cols; i++) {
-                    cv::Vec4b s = tempImage.at<cv::Vec4b>(j, i);
-                    if(s[3] > 0) {
-                        frameImage.at<cv::Vec3b>(face.y+j, face.x+i) = cv::Vec3b(s[0], s[1], s[2]);
-                    }
-                }
-            }
+            // うさみみ画像のリサイズ(画像の横幅を顔の横幅に合わせる、縦幅はアスペクト比を保持してリサイズ)
+            cv::resize(usamimiImage, tempImage, cv::Size(face.width, face.width * usamimiImage.rows / usamimiImage.cols));
+
+            cv::imshow("usamimiImage", tempImage);
+
+
+            // うさみみの背景は白色なので、白(255,255,255)以外をマスクし、copyToで合成
+            cv::Mat mask;
+            cv::cvtColor(tempImage, mask, cv::COLOR_BGR2GRAY);
+            cv::threshold(mask, mask, 245, 255, cv::THRESH_BINARY_INV);
+            tempImage.copyTo(frameImage(cv::Rect(face.x, face.y - face.width * usamimiImage.rows / usamimiImage.cols, face.width, face.width * usamimiImage.rows / usamimiImage.cols)), mask);
         }
-
-        // 眼領域の検出
-        for (int i = 0; i < eyes.size(); i++) {
-            // 検出情報から顔の位置情報を取得
-            cv::Rect eye = eyes[i];
-            // 取得した顔の位置情報に基づき、矩形描画を行う
-            cv::rectangle(frameImage,
-                cv::Point(eye.x, eye.y),
-                cv::Point(eye.x + eye.width, eye.y + eye.height),
-                CV_RGB(0, 255, 0),
-                3, cv::LINE_AA
-            );
-        }
-
-
         
         //認識結果画像表示
         cv::imshow("Face", frameImage);
