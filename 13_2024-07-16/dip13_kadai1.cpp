@@ -23,6 +23,9 @@ int main(int argc, char* argv[])
     cv::namedWindow("Binary");
     cv::namedWindow("Contour");
 
+    // ビデオライタ 
+    cv::VideoWriter writer("dip13_kadai1.mp4", cv::VideoWriter::fourcc('m', 'p', '4', 'v'), 30, imageSize);
+
     //動画処理用無限ループ
     while (1) {
         //ビデオキャプチャから1フレーム"frameImage"に取り込み
@@ -78,6 +81,9 @@ int main(int argc, char* argv[])
         cv::imshow("Frame", frameImage);
         cv::imshow("Contour", contourImage);
         cv::imshow("Binary", binaryImage);
+
+        //動画出力
+        writer << contourImage;
 
         //キー入力待ち
         int key = cv::waitKey(20);
