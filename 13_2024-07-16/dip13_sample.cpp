@@ -5,7 +5,7 @@
 int main(int argc, char* argv[])
 {
     //ビデオキャプチャの初期化
-    cv::VideoCapture capture("pantora.mp4");  //ビデオファイルをオープン
+    cv::VideoCapture capture("./src/pantora.mp4");  //ビデオファイルをオープン
     if (capture.isOpened()==0) {  //オープンに失敗した場合
         printf("Capture not found\n");
         return -1;
