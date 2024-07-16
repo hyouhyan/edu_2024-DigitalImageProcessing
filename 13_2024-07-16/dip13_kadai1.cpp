@@ -93,18 +93,50 @@ int main(int argc, char* argv[])
                 // 輪郭の色を定義
                 cv::Scalar color;
 
-
-
-                cv::drawContours(contourImage, contours, i, cv::Scalar(0, 0, 255), 2);
-
                 // 円形度を計算
                 double perimeter = cv::arcLength(contours[i], true);
                 double area = cv::contourArea(contours[i]);
                 double circularity = 4 * M_PI * area / (perimeter * perimeter);
 
+                // 円形度による分類
+                if(circularity > 0.82){
+                    // レモンバウム
+                    if (hsvColor[0] > 20 && hsvColor[0] < 40 && hsvColor[1] > 100 && hsvColor[2] > 100){
+                        color = color_lemon_baum;
+                    }else{
+                        // チーズブッセ
+                        color = color_cheese;
+                    }
+                }else if(circularity > 0.75){
+                    // 厚切りチョコケーキ
+                    if (hsvColor[1] < 50 && hsvColor[2] < 90){
+                        color = color_thick_choco;
+                    }else{
+                        // バナナブレッド
+                        color = color_banana_bread;
+                    }
+                }else{
+                    // ごろごろチョコチップスコーン
+                    color = color_goro_goro;
+                }
+
                 // 要素の面積と円形度を画面上に表示
-                cv::putText(contourImage, std::to_string(area), contours[i][0], cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 0, 0), 2);
-                cv::putText(contourImage, std::to_string(circularity), contours[i][0] + cv::Point(0, 20), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 0, 0), 2);
+                // cv::putText(contourImage, std::to_string(area), contours[i][0], cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 0, 0), 2);
+                // cv::putText(contourImage, std::to_string(circularity), contours[i][0] + cv::Point(0, 20), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 0, 0), 2);
+                
+                
+                cv::drawContours(contourImage, contours, i, color, 2);
+
+                // 画面左上(座標固定)にインジケーターを描画
+                cv::Point indicatorPos;
+
+                if (color == color_lemon_baum) indicatorPos = cv::Point(10, 10);
+                if (color == color_cheese) indicatorPos = cv::Point(30, 10);
+                if (color == color_thick_choco) indicatorPos = cv::Point(50, 10);
+                if (color == color_banana_bread) indicatorPos = cv::Point(70, 10);
+                if (color == color_goro_goro) indicatorPos = cv::Point(90, 10);
+
+                cv::circle(contourImage, indicatorPos, 10, color, -1);
 
             }
         }
