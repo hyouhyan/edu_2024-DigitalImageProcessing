@@ -28,6 +28,9 @@ int main(int argc, char* argv[])
     // 画素の平均を求めるループ用のcount
     int count = 0;
 
+    // 動画出力用のvideoWriter
+    cv::VideoWriter writer("./dst/dip13_kadai2.mp4", cv::VideoWriter::fourcc('m', 'p', '4', 'v'), 30, imageSize);
+
     //動画処理用無限ループ
     while (1) {
         //ビデオキャプチャから1フレーム"frameImage"に取り込み
@@ -60,6 +63,9 @@ int main(int argc, char* argv[])
         cv::imshow("Frame", frameImage);
         cv::imshow("Result", outputImage);
 
+        //動画出力
+        writer << outputImage;
+
         //キー入力待ち
         int key = cv::waitKey(20);
         //[Q]が押されたら無限ループ脱出
@@ -68,7 +74,7 @@ int main(int argc, char* argv[])
     }
 
     // Resultを出力
-    cv::imwrite("./dst/dip13_kadai2.jpg", outputImage);
+    cv::imwrite("./dst/dip13_kadai2_result.jpg", outputImage);
     
     //終了処理
     //カメラ終了
