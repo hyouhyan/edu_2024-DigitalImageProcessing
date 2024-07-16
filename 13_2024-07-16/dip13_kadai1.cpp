@@ -113,6 +113,13 @@ int main(int argc, char* argv[])
         for (int i = 0; i < contours.size(); i++) {
             // 面積が小さいものは無視
             if (cv::contourArea(contours[i]) > 1200) {
+                // 色抽出用座標
+                cv::Point pixelColor(contours[i][0].x + 5, contours[i][0].y + 10);
+
+                // 座標が画面端10%によっている時
+                if (pixelColor.x < width * 0.2 || pixelColor.y < height * 0.2) continue;
+                if (pixelColor.x > width * 0.8 || pixelColor.y > height * 0.8) continue;
+
                 cv::drawContours(contourImage, contours, i, cv::Scalar(0, 0, 255), 2);
 
                 // 円形度を計算
