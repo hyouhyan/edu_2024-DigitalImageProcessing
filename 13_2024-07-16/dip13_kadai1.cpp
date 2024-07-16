@@ -31,7 +31,6 @@ int main(int argc, char* argv[])
     cv::namedWindow("Contour");
 
     cv::Mat hsvImage;
-    std::vector<cv::Mat> hsvChannels;
 
     // ビデオライタ 
     cv::VideoWriter writer("dip13_kadai1.mp4", cv::VideoWriter::fourcc('m', 'p', '4', 'v'), 30, imageSize);
@@ -50,13 +49,11 @@ int main(int argc, char* argv[])
         cv::Mat grayImage;
         cv::cvtColor(frameImage, grayImage, cv::COLOR_BGR2GRAY);
         cv::cvtColor(frameImage, hsvImage, cv::COLOR_BGR2HSV);
-        cv::split(hsvImage, hsvChannels);
 
         // 2値化
         cv::Mat binaryImage;
         cv::threshold(grayImage, binaryImage, 189, 255, cv::THRESH_BINARY_INV);
 
-        // cv::threshold(hsvChannels[1], binaryImage, 40, 255, cv::THRESH_BINARY);
 
         // 収縮・膨張処理
         cv::Mat kernel = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3));
@@ -89,6 +86,9 @@ int main(int argc, char* argv[])
                 // 座標が画面端10%によっている時
                 if (pixelColor.x < width * 0.2 || pixelColor.y < height * 0.2) continue;
                 if (pixelColor.x > width * 0.8 || pixelColor.y > height * 0.8) continue;
+
+                // 色判定
+                cv::Vec3b hsv = hsvImage.at<cv::Vec3b>(pixelColor.y, pixelColor.x);
 
                 cv::drawContours(contourImage, contours, i, cv::Scalar(0, 0, 255), 2);
 
