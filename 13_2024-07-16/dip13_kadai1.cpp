@@ -88,7 +88,12 @@ int main(int argc, char* argv[])
                 if (pixelColor.x > width * 0.8 || pixelColor.y > height * 0.8) continue;
 
                 // 色判定
-                cv::Vec3b hsv = hsvImage.at<cv::Vec3b>(pixelColor.y, pixelColor.x);
+                cv::Vec3b hsvColor = hsvImage.at<cv::Vec3b>(pixelColor.y, pixelColor.x);
+
+                // 輪郭の色を定義
+                cv::Scalar color;
+
+
 
                 cv::drawContours(contourImage, contours, i, cv::Scalar(0, 0, 255), 2);
 
@@ -120,6 +125,11 @@ int main(int argc, char* argv[])
         //[Q]が押されたら無限ループ脱出
         if (key=='q')
             break;
+
+        // [S]が押されたら動画を一時停止
+        if (key=='s')
+            // 再度sが押されるまで無限ループ
+            while (cv::waitKey(0)!='s');
     }
     
     //終了処理
