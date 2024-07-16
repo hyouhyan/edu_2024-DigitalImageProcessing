@@ -114,7 +114,6 @@ int main(int argc, char* argv[])
         //動画出力
         writer << contourImage;
 
-        priorImage = grayImage.clone();
 
         //キー入力待ち
         int key = cv::waitKey(20);
