@@ -84,22 +84,19 @@ int main(int argc, char* argv[])
 
         // 2値化
         cv::Mat binaryImage;
-        cv::threshold(grayImage, binaryImage, 185, 255, cv::THRESH_BINARY);
+        cv::threshold(grayImage, binaryImage, 189, 255, cv::THRESH_BINARY_INV);
 
-        cv::threshold(hsvChannels[1], binaryImage, 40, 255, cv::THRESH_BINARY);
+        // cv::threshold(hsvChannels[1], binaryImage, 40, 255, cv::THRESH_BINARY);
 
         // 収縮・膨張処理
         cv::Mat kernel = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3));
         
-        // 膨らます
-        cv::dilate(binaryImage, binaryImage, kernel, cv::Point(-1, -1), 10);
-        // 削る
-        cv::erode(binaryImage, binaryImage, kernel, cv::Point(-1, -1), 10);
-
-        // 削る
-        cv::erode(binaryImage, binaryImage, kernel, cv::Point(-1, -1), 10);
-        // 膨らます
-        cv::dilate(binaryImage, binaryImage, kernel, cv::Point(-1, -1), 10);
+        //収縮
+        cv::erode(binaryImage, binaryImage, cv::Mat(), cv::Point(-1, -1), 11); 
+        //膨張
+        cv::dilate(binaryImage, binaryImage, cv::Mat(), cv::Point(-1, -1), 20);
+        //収縮
+        cv::erode(binaryImage, binaryImage, cv::Mat(), cv::Point(-1, -1), 9);
 
 
         // 輪郭表示用画像
