@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
     cv::Mat hsvImage;
 
     // ビデオライタ 
-    cv::VideoWriter writer("dip13_kadai1.mp4", cv::VideoWriter::fourcc('m', 'p', '4', 'v'), 30, imageSize);
+    cv::VideoWriter writer("./dst/dip13_kadai1.mp4", cv::VideoWriter::fourcc('m', 'p', '4', 'v'), 30, imageSize);
 
     //動画処理用無限ループ
     while (1) {
