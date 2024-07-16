@@ -90,11 +90,16 @@ int main(int argc, char* argv[])
 
         // 収縮・膨張処理
         cv::Mat kernel = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3));
-        // cv::erode(binaryImage, binaryImage, kernel, cv::Point(-1, -1), 10);
-        // cv::dilate(binaryImage, binaryImage, kernel, cv::Point(-1, -1), 10);
+        
+        // 膨らます
+        cv::dilate(binaryImage, binaryImage, kernel, cv::Point(-1, -1), 10);
+        // 削る
+        cv::erode(binaryImage, binaryImage, kernel, cv::Point(-1, -1), 10);
 
-        // cv::dilate(binaryImage, binaryImage, kernel, cv::Point(-1, -1), 10);
-        // cv::erode(binaryImage, binaryImage, kernel, cv::Point(-1, -1), 10);
+        // 削る
+        cv::erode(binaryImage, binaryImage, kernel, cv::Point(-1, -1), 10);
+        // 膨らます
+        cv::dilate(binaryImage, binaryImage, kernel, cv::Point(-1, -1), 10);
 
 
         // 輪郭表示用画像
@@ -113,10 +118,15 @@ int main(int argc, char* argv[])
             if (cv::contourArea(contours[i]) > 1200) {
                 cv::drawContours(contourImage, contours, i, cv::Scalar(0, 0, 255), 2);
 
-                // 要素の面積を画面上に表示
-                cv::Moments mu = cv::moments(contours[i]);
-                cv::Point2f mc = cv::Point2f(mu.m10 / mu.m00, mu.m01 / mu.m00);
-                cv::putText(contourImage, std::to_string(cv::contourArea(contours[i])), mc, cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 0, 0), 2);
+                // 円形度を計算
+                double perimeter = cv::arcLength(contours[i], true);
+                double area = cv::contourArea(contours[i]);
+                double circularity = 4 * M_PI * area / (perimeter * perimeter);
+
+                // 要素の面積と円形度を画面上に表示
+                cv::putText(contourImage, std::to_string(area), contours[i][0], cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 0, 0), 2);
+                cv::putText(contourImage, std::to_string(circularity), contours[i][0] + cv::Point(0, 20), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 0, 0), 2);
+
             }
         }
         
