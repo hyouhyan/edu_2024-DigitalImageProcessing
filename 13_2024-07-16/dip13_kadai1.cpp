@@ -37,6 +37,9 @@ int main(int argc, char* argv[])
     std::vector<unsigned char> status;  //作業用
     std::vector<float> errors;  //作業用
 
+    cv::Mat hsvImage;
+    std::vector<cv::Mat> hsvChannels;
+
     // ビデオライタ 
     cv::VideoWriter writer("dip13_kadai1.mp4", cv::VideoWriter::fourcc('m', 'p', '4', 'v'), 30, imageSize);
 
@@ -53,6 +56,8 @@ int main(int argc, char* argv[])
         // グレースケール画像に変換
         cv::Mat grayImage;
         cv::cvtColor(frameImage, grayImage, cv::COLOR_BGR2GRAY);
+        cv::cvtColor(frameImage, hsvImage, cv::COLOR_BGR2HSV);
+        cv::split(hsvImage, hsvChannels);
 
         cv::goodFeaturesToTrack(grayImage, priorFeature, 300, 0.01, 10);
 
@@ -80,11 +85,11 @@ int main(int argc, char* argv[])
         // 2値化
         cv::Mat binaryImage;
         cv::threshold(grayImage, binaryImage, 185, 255, cv::THRESH_BINARY);
-        // 白黒反転
-        cv::bitwise_not(binaryImage, binaryImage);
+
+        cv::threshold(hsvChannels[1], binaryImage, 40, 255, cv::THRESH_BINARY);
 
         // 収縮・膨張処理
-        // cv::Mat kernel = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3));
+        cv::Mat kernel = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3));
         // cv::erode(binaryImage, binaryImage, kernel, cv::Point(-1, -1), 10);
         // cv::dilate(binaryImage, binaryImage, kernel, cv::Point(-1, -1), 10);
 
