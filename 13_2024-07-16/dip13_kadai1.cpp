@@ -79,7 +79,7 @@ int main(int argc, char* argv[])
 
         // 2値化
         cv::Mat binaryImage;
-        cv::threshold(grayImage, binaryImage, 185, 255, cv::THRESH_BINARY | cv::THRESH_OTSU);
+        cv::threshold(grayImage, binaryImage, 185, 255, cv::THRESH_BINARY);
         // 白黒反転
         cv::bitwise_not(binaryImage, binaryImage);
 
