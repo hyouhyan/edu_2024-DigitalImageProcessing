@@ -190,22 +190,22 @@ void display()
     glutSolidCube(1.0);  // 立方体の配置
     glPopMatrix();  // 行列復帰
 
-    // if (400 < totalMotionX && totalMotionX < 1000) {
-    //     std::cout << "右にスワイプしました" << std::endl;
-    //     std::cout << "totalMotionX: " << totalMotionX << std::endl;
-    //     // マウスクリック座標をOpenGL座標に変換
-    //     gl_points.clear();
-    //     for (size_t i = 0; i < points.size(); i++) {
-    //         double x = (double)points[i].x / imageSize.width * 2000 - 1000;
-    //         double y = (double)(imageSize.height - points[i].y) / imageSize.height * 2000 - 1000;
-    //         gl_points.push_back(cv::Point3f(x, y, 0));
-    //     }
-    //     points.clear();
-    // } else if (-1000 < totalMotionX && totalMotionX < -500) {
-    //     std::cout << "左にスワイプしました" << std::endl;
-    //     std::cout << "totalMotionX: " << totalMotionX << std::endl;
-    //     points.clear();
-    // }
+    if (400 < totalMotionX && totalMotionX < 1000) {
+        std::cout << "右にスワイプしました" << std::endl;
+        std::cout << "totalMotionX: " << totalMotionX << std::endl;
+        // マウスクリック座標をOpenGL座標に変換
+        gl_points.clear();
+        for (size_t i = 0; i < points.size(); i++) {
+            double x = (double)points[i].x / imageSize.width * 2000 - 1000;
+            double y = (double)(imageSize.height - points[i].y) / imageSize.height * 2000 - 1000;
+            gl_points.push_back(cv::Point3f(x, y, 0));
+        }
+        points.clear();
+    } else if (-1000 < totalMotionX && totalMotionX < -500) {
+        std::cout << "左にスワイプしました" << std::endl;
+        std::cout << "totalMotionX: " << totalMotionX << std::endl;
+        points.clear();
+    }
 
     //色設定
     col[0] = 0.5; col[1] = 1.0; col[2] = 0.5;  // (0.5, 1.0, 0.5) : RGB
