@@ -1,7 +1,9 @@
 #include <iostream>  
 #include <GLUT/glut.h>  
 #include <math.h>  
-#include <opencv2/opencv.hpp>  
+#include <opencv2/opencv.hpp>
+
+#include <random>
 
 void initGL(void);
 void display(void);
@@ -12,6 +14,17 @@ void motion(int x, int y);
 void keyboard(unsigned char key, int x, int y);
 void initCV(void);
 void mouseCallback(int event, int x, int y, int flags, void *userdata);
+
+std::random_device seed_gen;
+std::mt19937 engine(seed_gen());
+std::uniform_int_distribution<> RandX(0.0, 700.0);
+std::uniform_int_distribution<> RandY(0.0, 100.0);
+std::uniform_int_distribution<> RandZ(-500.0, 500.0);
+
+int x_offset;
+int y_offset;
+int z_offset;
+
 
 // グローバル変数
 double eDist, eDegX, eDegY;  
@@ -286,10 +299,15 @@ void keyboard(unsigned char key, int x, int y)
             rotFlag = 1 - rotFlag;
             break;
         case 'x':
+            // 基準点をランダムに生成
+            x_offset = RandX(engine);
+            y_offset = RandY(engine);
+            z_offset = RandZ(engine);
             for (size_t i = 0; i < points.size(); i++) {
                 double x = (double)points[i].x / imageSize.width * 2000 - 1000;
-                double y = (double)(imageSize.height - points[i].y) / imageSize.height * 2000 - 1000;
-                gl_points_tmp.push_back(cv::Point3f(x, y, 0));
+                double y = (double)(imageSize.height - points[i].y) / imageSize.height * 2000 - 200;
+
+                gl_points_tmp.push_back(cv::Point3f(x + x_offset, y + y_offset, z_offset));
             }
             gl_points.push_back(gl_points_tmp);
             gl_points_tmp.clear();
