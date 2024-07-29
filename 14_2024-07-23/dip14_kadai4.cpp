@@ -30,7 +30,9 @@ double theta = 0.0;
 double delta = 1.0;  
 int rotFlag = 1;  
 std::vector<cv::Point> points;  // マウスクリック座標の格納用配列
-std::vector<cv::Point3f> gl_points;  // マウスクリック座標の格納用配列
+std::vector<std::vector<cv::Point3f>> gl_points;  // マウスクリック座標の格納用配列
+
+std::vector<cv::Point3f> gl_points_tmp;
 
 // main関数
 int main(int argc, char* argv[])
@@ -207,20 +209,20 @@ void display()
     //     points.clear();
     // }
 
-    //色設定
-    col[0] = 0.5; col[1] = 1.0; col[2] = 0.5;  // (0.5, 1.0, 0.5) : RGB
-    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, col);  //拡散反射係数
-    col[0] = 1.0; col[1] = 1.0; col[2] = 1.0; col[3] = 1.0;
-    glMaterialfv(GL_FRONT, GL_SPECULAR, col);
-    glMaterialf(GL_FRONT, GL_SHININESS, 64);  //ハイライト係数
-    glPushMatrix();  //行列一時保存
-    glBegin(GL_LINE_STRIP);
-    for(int i=0; i<gl_points.size(); i++) {
-        glVertex3f(gl_points[i].x/4, gl_points[i].y/4, 0);
+    for (int i = 0; i < gl_points.size(); i++) {
+        // 色設定
+        col[0] = 0.5; col[1] = 1.0; col[2] = 0.5;  // (0.5, 1.0, 0.5) : RGB
+        glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, col);  // 拡散反射係数
+        col[0] = 1.0; col[1] = 1.0; col[2] = 1.0; col[3] = 1.0;
+        glMaterialfv(GL_FRONT, GL_SPECULAR, col);
+        glMaterialf(GL_FRONT, GL_SHININESS, 64);  // ハイライト係数
+
+        glBegin(GL_LINE_STRIP);
+        for (int j = 0; j < gl_points[i].size(); j++) {
+            glVertex3f(gl_points[i][j].x / 4, gl_points[i][j].y / 4, 0);
+        }
+        glEnd();
     }
-    glEnd();
-    glPopMatrix();  //行列復帰
-    
     // 描画実行
     glutSwapBuffers();
 }
@@ -284,12 +286,13 @@ void keyboard(unsigned char key, int x, int y)
             rotFlag = 1 - rotFlag;
             break;
         case 'x':
-            gl_points.clear();
             for (size_t i = 0; i < points.size(); i++) {
                 double x = (double)points[i].x / imageSize.width * 2000 - 1000;
                 double y = (double)(imageSize.height - points[i].y) / imageSize.height * 2000 - 1000;
-                gl_points.push_back(cv::Point3f(x, y, 0));
+                gl_points_tmp.push_back(cv::Point3f(x, y, 0));
             }
+            gl_points.push_back(gl_points_tmp);
+            gl_points_tmp.clear();
             points.clear();
             break;
         case 'c':
