@@ -240,6 +240,18 @@ void display()
     glutSwapBuffers();
 }
 
+
+int maxX = 400;
+int minX = -400;
+int maxY = 200;
+int minY = 10;
+int maxZ = 400;
+int minZ = -400;
+
+int velocityX = 30;
+int velocityY = 30;
+int velocityZ = 30;
+
 // タイマーコールバック関数
 void timer(int value)
 {
@@ -248,6 +260,29 @@ void timer(int value)
     }
     
     theta += delta;
+
+    // 生成した物体を跳ねさせる
+    for (int i = 0; i < gl_points.size(); i++) {
+        // 最初の点について範囲チェックを行い、範囲外なら速度を反転
+        if (gl_points[i][0].x > maxX || gl_points[i][0].x < minX){
+            velocityX = -1 * velocityX;
+        }
+        if (gl_points[i][0].y > maxY || gl_points[i][0].y < minY){
+            velocityY = -1 * velocityY;
+        }
+        if (gl_points[i][0].z > maxZ || gl_points[i][0].z < minZ){
+            velocityZ = -1 * velocityZ;
+        }
+    }
+
+    // 全ての点を同じ速度で動かす
+    for (int i = 0; i < gl_points.size(); i++) {
+        for (int j = 0; j < gl_points[i].size(); j++) {
+            gl_points[i][j].x += velocityX;
+            gl_points[i][j].y += velocityY;
+            gl_points[i][j].z += velocityZ;
+        }
+    }
     
     glutPostRedisplay();  // ディスプレイイベント強制発生
     glutTimerFunc(1000 / fr, timer, 0);  // タイマー再設定
