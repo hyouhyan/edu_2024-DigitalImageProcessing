@@ -48,6 +48,9 @@ cv::CascadeClassifier right_eyeClassifier;  // 右目認識用分類器
 cv::CascadeClassifier mouthClassifier;  // 口認識用分類器
 cv::CascadeClassifier noseClassifier;  // 鼻認識用分類器
 
+// 顔の座標を保存するグローバル変数
+cv::Rect face_position, left_eye_position, right_eye_position, mouth_position, nose_position;
+
 
 //main関数
 int main(int argc, char* argv[])
@@ -71,8 +74,8 @@ int main(int argc, char* argv[])
 void initCV()
 {
 	//カメラキャプチャの初期化
-	// capture = cv::VideoCapture(0);
-    capture = cv::VideoCapture("./src/face.mov");
+	capture = cv::VideoCapture(0);
+    // capture = cv::VideoCapture("./src/face.mov");
 	if (capture.isOpened()==0) {
 		//カメラが見つからないときはメッセージを表示して終了
 		printf("Camera not found\n");
@@ -88,8 +91,6 @@ void initCV()
 	faceClassifier.load("./src/haarcascade_frontalface_default.xml");
     left_eyeClassifier.load("./src/haarcascade_lefteye_2splits.xml");
     right_eyeClassifier.load("./src/haarcascade_righteye_2splits.xml");
-    mouthClassifier.load("./src/haarcascade_mcs_mouth.xml");
-    noseClassifier.load("./src/haarcascade_mcs_nose.xml");
 }
 
 //OpenGL初期設定処理
@@ -148,10 +149,8 @@ void display(void)
 
     //画像中から検出対象の情報を取得する
 	faceClassifier.detectMultiScale(frameImage, faces, 1.1, 3, 0, cv::Size(20,20));  //顔
-    left_eyeClassifier.detectMultiScale(frameImage, left_eyes, 1.1, 3, 0, cv::Size(20,20));  //左目
-    right_eyeClassifier.detectMultiScale(frameImage, right_eyes, 1.1, 3, 0, cv::Size(20,20));  //右目
-    mouthClassifier.detectMultiScale(frameImage, mouths, 1.1, 3, 0, cv::Size(20,20));  //口
-    noseClassifier.detectMultiScale(frameImage, noses, 1.1, 3, 0, cv::Size(20,20));  //鼻
+    left_eyeClassifier.detectMultiScale(frameImage, left_eyes, 1.1, 3, 0, cv::Size(10,10));  //左目
+    right_eyeClassifier.detectMultiScale(frameImage, right_eyes, 1.1, 3, 0, cv::Size(10,10));  //右目
 
     //顔
 	for (int i=0; i<faces.size(); i++) {
@@ -163,56 +162,54 @@ void display(void)
         }
         //取得した位置情報に基づき矩形描画
 		cv::rectangle(frameImage, cv::Point(face.x, face.y), cv::Point(face.x+face.width, face.y+face.height), CV_RGB(255,0,0), 2, 8);
+
+        face_position = face;
+
+        // 左目の描画
+        cv::Rect left_eye;
+        for (int j=0; j<left_eyes.size(); j++) {
+            cv::Rect left_eye_tmp = left_eyes[j];
+            // 左目がfaceの中にあるか
+            if (left_eye_tmp.x > face.x && left_eye_tmp.x < face.x + face.width && left_eye_tmp.y > face.y && left_eye_tmp.y < face.y + face.height) {
+                // 左目の位置が顔半分より左にあるか
+                if (left_eye_tmp.x < face.x + face.width/2) {
+                    // left_eyeが未設定 or left_eyeの面積がleft_eye_tmpの面積より小さい場合
+                    if (left_eye.area() == 0 || left_eye.area() > left_eye_tmp.area()) {
+                        left_eye = left_eye_tmp;
+                    }
+                }
+            }
+        }
+        if (left_eye.area() > 0) {
+            cv::rectangle(frameImage, cv::Point(left_eye.x, left_eye.y), cv::Point(left_eye.x+left_eye.width, left_eye.y+left_eye.height), CV_RGB(0,255,0), 2, 8);
+            left_eye_position = left_eye;
+        }
+
+        // 右目の描画
+        cv::Rect right_eye;
+        for (int j=0; j<right_eyes.size(); j++) {
+            cv::Rect right_eye_tmp = right_eyes[j];
+            // 右目がfaceの中にあるか
+            if (right_eye_tmp.x > face.x && right_eye_tmp.x < face.x + face.width && right_eye_tmp.y > face.y && right_eye_tmp.y < face.y + face.height) {
+                // 右目の位置が顔半分より右にあるか
+                if (right_eye_tmp.x > face.x + face.width/2) {
+                    // right_eyeが未設定 or right_eyeの面積がright_eye_tmpの面積より小さい場合
+                    if (right_eye.area() == 0 || right_eye.area() > right_eye_tmp.area()) {
+                        right_eye = right_eye_tmp;
+                    }
+                }
+            }
+        }
+        if (right_eye.area() > 0) {
+            cv::rectangle(frameImage, cv::Point(right_eye.x, right_eye.y), cv::Point(right_eye.x+right_eye.width, right_eye.y+right_eye.height), CV_RGB(0,0,255), 2, 8);
+            right_eye_position = right_eye;
+        }
     }
 
-    //左目
-    for (int i=0; i<left_eyes.size(); i++) {
-        //検出情報から位置情報を取得
-        cv::Rect left_eye = left_eyes[i];
-        //大きさによるチェック。
-        if(left_eye.width*left_eye.height<10*10){
-            continue;  //小さい矩形は採用しない
-        }
-        //取得した位置情報に基づき矩形描画
-        cv::rectangle(frameImage, cv::Point(left_eye.x, left_eye.y), cv::Point(left_eye.x+left_eye.width, left_eye.y+left_eye.height), CV_RGB(0,255,0), 2, 8);
-    }
+    std::cout << "face_position: " << face_position << std::endl;
+    std::cout << "left_eye_position: " << left_eye_position << std::endl;
+    std::cout << "right_eye_position: " << right_eye_position << std::endl;
 
-    //右目
-    for (int i=0; i<right_eyes.size(); i++) {
-        //検出情報から位置情報を取得
-        cv::Rect right_eye = right_eyes[i];
-        //大きさによるチェック。
-        if(right_eye.width*right_eye.height<10*10){
-            continue;  //小さい矩形は採用しない
-        }
-        //取得した位置情報に基づき矩形描画
-        cv::rectangle(frameImage, cv::Point(right_eye.x, right_eye.y), cv::Point(right_eye.x+right_eye.width, right_eye.y+right_eye.height), CV_RGB(0,255,0), 2, 8);
-    }
-
-    //口
-    for (int i=0; i<mouths.size(); i++) {
-        //検出情報から位置情報を取得
-        cv::Rect mouth = mouths[i];
-        //大きさによるチェック。
-        if(mouth.width*mouth.height<10*10){
-            continue;  //小さい矩形は採用しない
-        }
-        //取得した位置情報に基づき矩形描画
-        cv::rectangle(frameImage, cv::Point(mouth.x, mouth.y), cv::Point(mouth.x+mouth.width, mouth.y+mouth.height), CV_RGB(0,0,255), 2, 8);
-    }
-
-    //鼻
-    for (int i=0; i<noses.size(); i++) {
-        //検出情報から位置情報を取得
-        cv::Rect nose = noses[i];
-        //大きさによるチェック。
-        if(nose.width*nose.height<10*10){
-            continue;  //小さい矩形は採用しない
-        }
-        //取得した位置情報に基づき矩形描画
-        cv::rectangle(frameImage, cv::Point(nose.x, nose.y), cv::Point(nose.x+nose.width, nose.y+nose.height), CV_RGB(255,255,0), 2, 8);
-    }
-    
     //フレーム画像表示
     cv::imshow("Frame", frameImage);
     
@@ -238,6 +235,8 @@ void display(void)
     glLightfv(GL_LIGHT0, GL_POSITION, pos0);
     
     //--------------------顔--------------------
+    // 中心座標を取得
+    cv::Point face_center(face_position.x + face_position.width/2, face_position.y + face_position.height/2);
     //色設定
     col[0] = 1.0; col[1] = 0.8; col[2] = 0.5;
     glMaterialfv(GL_FRONT, GL_DIFFUSE, col);  //拡散反射係数
@@ -246,9 +245,41 @@ void display(void)
     glMaterialfv(GL_FRONT, GL_SPECULAR, col);
     glMaterialf(GL_FRONT, GL_SHININESS, 64);  //ハイライト係数
     glPushMatrix();  //行列一時保存
-    glTranslated(0.0, 0.0, 0.0);  //中心座標
-    glScaled(250.0, 250.0, 60.0);  //拡大縮小
+    glTranslated(face_center.x - imageSize.width/2, imageSize.height/2 - face_center.y, 0.0);  //中心座標
+    glScaled(face_position.width, face_position.height, 10.0);  //拡大縮小
     glutSolidCube(1.0);  //立方体の配置
+    glPopMatrix();  //行列復帰
+
+    // グローバル変数をもとに目を描画
+    // 左目の位置に球を描画
+    // 中心座標を取得
+    cv::Point left_eye_center(left_eye_position.x + left_eye_position.width/2, left_eye_position.y + left_eye_position.height/2);
+    col[0] = 0.0; col[1] = 0.0; col[2] = 0.0;
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, col);  //拡散反射係数
+    glMaterialfv(GL_FRONT, GL_AMBIENT, col);  //環境光反射係数
+    col[0] = 0.5; col[1] = 0.5; col[2] = 0.5; col[3] = 1.0;
+    glMaterialfv(GL_FRONT, GL_SPECULAR, col);
+    glMaterialf(GL_FRONT, GL_SHININESS, 64);  //ハイライト係数
+    glPushMatrix();  //行列一時保存
+    glTranslated(left_eye_center.x - imageSize.width/2, imageSize.height/2 - left_eye_center.y, 30.0);  //中心座標
+    glScaled(left_eye_position.width/2, left_eye_position.height/2, 10.0);  //拡大縮小
+    glutSolidSphere(1.0, 100, 100); //球の配置
+    glPopMatrix();  //行列復帰
+
+
+    // ------------------右目------------------
+    //中心座標
+    cv::Point right_eye_center(right_eye_position.x + right_eye_position.width/2, right_eye_position.y + right_eye_position.height/2);
+    col[0] = 0.0; col[1] = 0.0; col[2] = 0.0;
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, col);  //拡散反射係数
+    glMaterialfv(GL_FRONT, GL_AMBIENT, col);  //環境光反射係数
+    col[0] = 0.5; col[1] = 0.5; col[2] = 0.5; col[3] = 1.0;
+    glMaterialfv(GL_FRONT, GL_SPECULAR, col);
+    glMaterialf(GL_FRONT, GL_SHININESS, 64);  //ハイライト係数
+    glPushMatrix();  //行列一時保存
+    glTranslated(right_eye_center.x - imageSize.width/2, imageSize.height/2 - right_eye_center.y, 30.0);  //中心座標
+    glScaled(right_eye_position.width/2, right_eye_position.height/2, 10.0);  //拡大縮小
+    glutSolidSphere(1.0, 100, 100); //球の配置
     glPopMatrix();  //行列復帰
 
     //描画実行
