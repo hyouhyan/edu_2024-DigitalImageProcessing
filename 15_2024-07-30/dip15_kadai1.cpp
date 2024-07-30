@@ -146,8 +146,8 @@ void display(void)
 
     //画像中から検出対象の情報を取得する
 	faceClassifier.detectMultiScale(frameImage, faces, 1.1, 3, 0, cv::Size(20,20));  //顔
-    left_eyeClassifier.detectMultiScale(frameImage, left_eyes, 1.1, 3, 0, cv::Size(20,20));  //左目
-    right_eyeClassifier.detectMultiScale(frameImage, right_eyes, 1.1, 3, 0, cv::Size(20,20));  //右目
+    left_eyeClassifier.detectMultiScale(frameImage, left_eyes, 1.1, 3, 0, cv::Size(10,10));  //左目
+    right_eyeClassifier.detectMultiScale(frameImage, right_eyes, 1.1, 3, 0, cv::Size(10,10));  //右目
 
     //顔
 	for (int i=0; i<faces.size(); i++) {
