@@ -327,6 +327,37 @@ void display(void)
     glutSolidSphere(1.0, 100, 100); //球の配置
     glPopMatrix();  //行列復帰
 
+    // ------------------口------------------
+    //中心座標
+    cv::Point mouth_center(mouth_position.x + mouth_position.width/2, mouth_position.y + mouth_position.height/2);
+    col[0] = 0.0; col[1] = 0.0; col[2] = 0.0;
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, col);  //拡散反射係数
+    glMaterialfv(GL_FRONT, GL_AMBIENT, col);  //環境光反射係数
+    col[0] = 0.5; col[1] = 0.5; col[2] = 0.5; col[3] = 1.0;
+    glMaterialfv(GL_FRONT, GL_SPECULAR, col);
+    glMaterialf(GL_FRONT, GL_SHININESS, 64);  //ハイライト係数
+    glPushMatrix();  //行列一時保存
+    glTranslated(mouth_center.x - imageSize.width/2, imageSize.height/2 - mouth_center.y, 30.0);  //中心座標
+    glScaled(mouth_position.width/2, mouth_position.height/2, 10.0);  //拡大縮小
+    glutSolidCube(1.0);
+    glPopMatrix();  //行列復帰
+
+    // ------------------鼻------------------
+    //中心座標
+    cv::Point nose_center(nose_position.x + nose_position.width/2, nose_position.y + nose_position.height/2);
+    col[0] = 0.0; col[1] = 0.0; col[2] = 0.0;
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, col);  //拡散反射係数
+    glMaterialfv(GL_FRONT, GL_AMBIENT, col);  //環境光反射係数
+    col[0] = 0.5; col[1] = 0.5; col[2] = 0.5; col[3] = 1.0;
+    glMaterialfv(GL_FRONT, GL_SPECULAR, col);
+    glMaterialf(GL_FRONT, GL_SHININESS, 64);  //ハイライト係数
+    glPushMatrix();  //行列一時保存
+    glTranslated(nose_center.x - imageSize.width/2, imageSize.height/2 - nose_center.y, 30.0);  //中心座標
+    glScaled(nose_position.width/2, nose_position.height/2, 10.0);  //拡大縮小
+    glutSolidCube(1.0);
+    glPopMatrix();  //行列復帰
+
+
     //描画実行
     glutSwapBuffers();
 }
