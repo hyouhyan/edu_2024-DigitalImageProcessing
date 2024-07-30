@@ -75,7 +75,7 @@ void initCV()
 {
 	//カメラキャプチャの初期化
 	capture = cv::VideoCapture(0);
-    capture = cv::VideoCapture("./src/face.mov");
+    // capture = cv::VideoCapture("./src/face.mov");
 	if (capture.isOpened()==0) {
 		//カメラが見つからないときはメッセージを表示して終了
 		printf("Camera not found\n");
@@ -162,6 +162,7 @@ void display(void)
         }
         //取得した位置情報に基づき矩形描画
 		cv::rectangle(frameImage, cv::Point(face.x, face.y), cv::Point(face.x+face.width, face.y+face.height), CV_RGB(255,0,0), 2, 8);
+
         face_position = face;
 
         // 左目の描画
@@ -234,6 +235,8 @@ void display(void)
     glLightfv(GL_LIGHT0, GL_POSITION, pos0);
     
     //--------------------顔--------------------
+    // 中心座標を取得
+    cv::Point face_center(face_position.x + face_position.width/2, face_position.y + face_position.height/2);
     //色設定
     col[0] = 1.0; col[1] = 0.8; col[2] = 0.5;
     glMaterialfv(GL_FRONT, GL_DIFFUSE, col);  //拡散反射係数
@@ -242,13 +245,15 @@ void display(void)
     glMaterialfv(GL_FRONT, GL_SPECULAR, col);
     glMaterialf(GL_FRONT, GL_SHININESS, 64);  //ハイライト係数
     glPushMatrix();  //行列一時保存
-    glTranslated((face_position.x - frameImage.cols/2) * 500.0 / frameImage.cols, (frameImage.rows/2 - face_position.y) * 500.0 / frameImage.rows, 0.0);  //中心座標
-    glScaled(250.0, 250.0, 60.0);  //拡大縮小
+    glTranslated(face_center.x - imageSize.width/2, imageSize.height/2 - face_center.y, 0.0);  //中心座標
+    glScaled(face_position.width, face_position.height, 10.0);  //拡大縮小
     glutSolidCube(1.0);  //立方体の配置
     glPopMatrix();  //行列復帰
 
     // グローバル変数をもとに目を描画
     // 左目の位置に球を描画
+    // 中心座標を取得
+    cv::Point left_eye_center(left_eye_position.x + left_eye_position.width/2, left_eye_position.y + left_eye_position.height/2);
     col[0] = 0.0; col[1] = 0.0; col[2] = 0.0;
     glMaterialfv(GL_FRONT, GL_DIFFUSE, col);  //拡散反射係数
     glMaterialfv(GL_FRONT, GL_AMBIENT, col);  //環境光反射係数
@@ -256,13 +261,15 @@ void display(void)
     glMaterialfv(GL_FRONT, GL_SPECULAR, col);
     glMaterialf(GL_FRONT, GL_SHININESS, 64);  //ハイライト係数
     glPushMatrix();  //行列一時保存
-    glTranslated((left_eye_position.x - frameImage.cols/2) * 500.0 / frameImage.cols, (frameImage.rows/2 - left_eye_position.y) * 500.0 / frameImage.rows, 30.0);  //中心座標
-    glScaled(20.0, 20.0, 10.0);  //拡大縮小
+    glTranslated(left_eye_center.x - imageSize.width/2, imageSize.height/2 - left_eye_center.y, 30.0);  //中心座標
+    glScaled(left_eye_position.width/2, left_eye_position.height/2, 10.0);  //拡大縮小
     glutSolidSphere(1.0, 100, 100); //球の配置
     glPopMatrix();  //行列復帰
 
 
     // ------------------右目------------------
+    //中心座標
+    cv::Point right_eye_center(right_eye_position.x + right_eye_position.width/2, right_eye_position.y + right_eye_position.height/2);
     col[0] = 0.0; col[1] = 0.0; col[2] = 0.0;
     glMaterialfv(GL_FRONT, GL_DIFFUSE, col);  //拡散反射係数
     glMaterialfv(GL_FRONT, GL_AMBIENT, col);  //環境光反射係数
@@ -270,8 +277,8 @@ void display(void)
     glMaterialfv(GL_FRONT, GL_SPECULAR, col);
     glMaterialf(GL_FRONT, GL_SHININESS, 64);  //ハイライト係数
     glPushMatrix();  //行列一時保存
-    glTranslated((right_eye_position.x - frameImage.cols/2) * 500.0 / frameImage.cols, (frameImage.rows/2 - right_eye_position.y) * 500.0 / frameImage.rows, 30.0);  //中心座標
-    glScaled(20.0, 20.0, 10.0);  //拡大縮小
+    glTranslated(right_eye_center.x - imageSize.width/2, imageSize.height/2 - right_eye_center.y, 30.0);  //中心座標
+    glScaled(right_eye_position.width/2, right_eye_position.height/2, 10.0);  //拡大縮小
     glutSolidSphere(1.0, 100, 100); //球の配置
     glPopMatrix();  //行列復帰
 
