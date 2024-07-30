@@ -88,8 +88,6 @@ void initCV()
 	faceClassifier.load("./src/haarcascade_frontalface_default.xml");
     left_eyeClassifier.load("./src/haarcascade_lefteye_2splits.xml");
     right_eyeClassifier.load("./src/haarcascade_righteye_2splits.xml");
-    mouthClassifier.load("./src/haarcascade_mcs_mouth.xml");
-    noseClassifier.load("./src/haarcascade_mcs_nose.xml");
 }
 
 //OpenGL初期設定処理
@@ -150,8 +148,6 @@ void display(void)
 	faceClassifier.detectMultiScale(frameImage, faces, 1.1, 3, 0, cv::Size(20,20));  //顔
     left_eyeClassifier.detectMultiScale(frameImage, left_eyes, 1.1, 3, 0, cv::Size(20,20));  //左目
     right_eyeClassifier.detectMultiScale(frameImage, right_eyes, 1.1, 3, 0, cv::Size(20,20));  //右目
-    mouthClassifier.detectMultiScale(frameImage, mouths, 1.1, 3, 0, cv::Size(20,20));  //口
-    noseClassifier.detectMultiScale(frameImage, noses, 1.1, 3, 0, cv::Size(20,20));  //鼻
 
     //顔
 	for (int i=0; i<faces.size(); i++) {
@@ -187,30 +183,6 @@ void display(void)
         }
         //取得した位置情報に基づき矩形描画
         cv::rectangle(frameImage, cv::Point(right_eye.x, right_eye.y), cv::Point(right_eye.x+right_eye.width, right_eye.y+right_eye.height), CV_RGB(0,255,0), 2, 8);
-    }
-
-    //口
-    for (int i=0; i<mouths.size(); i++) {
-        //検出情報から位置情報を取得
-        cv::Rect mouth = mouths[i];
-        //大きさによるチェック。
-        if(mouth.width*mouth.height<10*10){
-            continue;  //小さい矩形は採用しない
-        }
-        //取得した位置情報に基づき矩形描画
-        cv::rectangle(frameImage, cv::Point(mouth.x, mouth.y), cv::Point(mouth.x+mouth.width, mouth.y+mouth.height), CV_RGB(0,0,255), 2, 8);
-    }
-
-    //鼻
-    for (int i=0; i<noses.size(); i++) {
-        //検出情報から位置情報を取得
-        cv::Rect nose = noses[i];
-        //大きさによるチェック。
-        if(nose.width*nose.height<10*10){
-            continue;  //小さい矩形は採用しない
-        }
-        //取得した位置情報に基づき矩形描画
-        cv::rectangle(frameImage, cv::Point(nose.x, nose.y), cv::Point(nose.x+nose.width, nose.y+nose.height), CV_RGB(255,255,0), 2, 8);
     }
     
     //フレーム画像表示
