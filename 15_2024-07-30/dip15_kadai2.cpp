@@ -91,6 +91,8 @@ void initCV()
 	faceClassifier.load("./src/haarcascade_frontalface_default.xml");
     left_eyeClassifier.load("./src/haarcascade_lefteye_2splits.xml");
     right_eyeClassifier.load("./src/haarcascade_righteye_2splits.xml");
+    mouthClassifier.load("./src/haarcascade_mcs_mouth.xml");
+    noseClassifier.load("./src/haarcascade_mcs_nose.xml");
 }
 
 //OpenGL初期設定処理
@@ -151,6 +153,9 @@ void display(void)
 	faceClassifier.detectMultiScale(frameImage, faces, 1.1, 3, 0, cv::Size(20,20));  //顔
     left_eyeClassifier.detectMultiScale(frameImage, left_eyes, 1.1, 3, 0, cv::Size(10,10));  //左目
     right_eyeClassifier.detectMultiScale(frameImage, right_eyes, 1.1, 3, 0, cv::Size(10,10));  //右目
+    mouthClassifier.detectMultiScale(frameImage, mouths, 1.1, 3, 0, cv::Size(10,10));  //口
+    noseClassifier.detectMultiScale(frameImage, noses, 1.1, 3, 0, cv::Size(10,10));  //鼻
+
 
     //顔
 	for (int i=0; i<faces.size(); i++) {
@@ -203,6 +208,46 @@ void display(void)
         if (right_eye.area() > 0) {
             cv::rectangle(frameImage, cv::Point(right_eye.x, right_eye.y), cv::Point(right_eye.x+right_eye.width, right_eye.y+right_eye.height), CV_RGB(0,0,255), 2, 8);
             right_eye_position = right_eye;
+        }
+
+        // 口
+        cv::Rect mouth;
+        for (int j=0; j<mouths.size(); j++) {
+            cv::Rect mouth_tmp = mouths[j];
+            // 口がfaceの中にあるか
+            if (mouth_tmp.x > face.x && mouth_tmp.x < face.x + face.width && mouth_tmp.y > face.y && mouth_tmp.y < face.y + face.height) {
+                // 口が顔の下半分にあるか
+                if (mouth_tmp.y > face.y + face.height/2) {
+                    // 口が未設定 or 口の面積がmouth_tmpの面積より小さい場合
+                    if (mouth.area() == 0 || mouth.area() > mouth_tmp.area()) {
+                        mouth = mouth_tmp;
+                    }
+                }
+            }
+        }
+        if (mouth.area() > 0) {
+            cv::rectangle(frameImage, cv::Point(mouth.x, mouth.y), cv::Point(mouth.x+mouth.width, mouth.y+mouth.height), CV_RGB(0,255,255), 2, 8);
+            mouth_position = mouth;
+        }
+
+        // 鼻
+        cv::Rect nose;
+        for (int j=0; j<noses.size(); j++) {
+            cv::Rect nose_tmp = noses[j];
+            // 鼻がfaceの中にあるか
+            if (nose_tmp.x > face.x && nose_tmp.x < face.x + face.width && nose_tmp.y > face.y && nose_tmp.y < face.y + face.height) {
+                // 鼻が顔の中央50%にあるか
+                if (nose_tmp.x > face.x + face.width/4 && nose_tmp.x < face.x + face.width*3/4 && nose_tmp.y > face.y + face.height/4 && nose_tmp.y < face.y + face.height*3/4) {
+                    // 鼻が未設定 or 鼻の面積がnose_tmpの面積より小さい場合
+                    if (nose.area() == 0 || nose.area() > nose_tmp.area()) {
+                        nose = nose_tmp;
+                    }
+                }
+            }
+        }
+        if (nose.area() > 0) {
+            cv::rectangle(frameImage, cv::Point(nose.x, nose.y), cv::Point(nose.x+nose.width, nose.y+nose.height), CV_RGB(255,0,255), 2, 8);
+            nose_position = nose;
         }
     }
 
