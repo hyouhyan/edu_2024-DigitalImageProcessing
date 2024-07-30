@@ -247,6 +247,33 @@ void display(void)
     glutSolidCube(1.0);  //立方体の配置
     glPopMatrix();  //行列復帰
 
+    // グローバル変数をもとに目を描画
+    // ------------------左目------------------
+    col[0] = 0.0; col[1] = 0.0; col[2] = 0.0;
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, col);  //拡散反射係数
+    glMaterialfv(GL_FRONT, GL_AMBIENT, col);  //環境光反射係数
+    col[0] = 0.5; col[1] = 0.5; col[2] = 0.5; col[3] = 1.0;
+    glMaterialfv(GL_FRONT, GL_SPECULAR, col);
+    glMaterialf(GL_FRONT, GL_SHININESS, 64);  //ハイライト係数
+    glPushMatrix();  //行列一時保存
+    glTranslated((left_eye_position.x - frameImage.cols/2) * 250.0 / frameImage.cols, (frameImage.rows/2 - left_eye_position.y) * 250.0 / frameImage.rows, 30.0);  //中心座標
+    glScaled(50.0, 50.0, 10.0);  //拡大縮小
+    glutSolidCube(1.0);  //立方体の配置
+    glPopMatrix();  //行列復帰
+
+    // ------------------右目------------------
+    col[0] = 0.0; col[1] = 0.0; col[2] = 0.0;
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, col);  //拡散反射係数
+    glMaterialfv(GL_FRONT, GL_AMBIENT, col);  //環境光反射係数
+    col[0] = 0.5; col[1] = 0.5; col[2] = 0.5; col[3] = 1.0;
+    glMaterialfv(GL_FRONT, GL_SPECULAR, col);
+    glMaterialf(GL_FRONT, GL_SHININESS, 64);  //ハイライト係数
+    glPushMatrix();  //行列一時保存
+    glTranslated((right_eye_position.x - frameImage.cols/2) * 250.0 / frameImage.cols, (frameImage.rows/2 - right_eye_position.y) * 250.0 / frameImage.rows, 30.0);  //中心座標
+    glScaled(50.0, 50.0, 10.0);  //拡大縮小
+    glutSolidCube(1.0);  //立方体の配置
+    glPopMatrix();  //行列復帰
+
     //描画実行
     glutSwapBuffers();
 }
