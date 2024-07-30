@@ -65,7 +65,8 @@ int main(int argc, char* argv[])
 void initCV()
 {
 	//カメラキャプチャの初期化
-	capture = cv::VideoCapture(0);
+	// capture = cv::VideoCapture(0);
+    capture = cv::VideoCapture("./src/face.mov");
 	if (capture.isOpened()==0) {
 		//カメラが見つからないときはメッセージを表示して終了
 		printf("Camera not found\n");
