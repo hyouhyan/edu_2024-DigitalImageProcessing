@@ -74,7 +74,7 @@ int main(int argc, char* argv[])
 void initCV()
 {
 	//カメラキャプチャの初期化
-	// capture = cv::VideoCapture(0);
+	capture = cv::VideoCapture(0);
     capture = cv::VideoCapture("./src/face.mov");
 	if (capture.isOpened()==0) {
 		//カメラが見つからないときはメッセージを表示して終了
@@ -242,13 +242,13 @@ void display(void)
     glMaterialfv(GL_FRONT, GL_SPECULAR, col);
     glMaterialf(GL_FRONT, GL_SHININESS, 64);  //ハイライト係数
     glPushMatrix();  //行列一時保存
-    glTranslated(0.0, 0.0, 0.0);  //中心座標
+    glTranslated((face_position.x - frameImage.cols/2) * 500.0 / frameImage.cols, (frameImage.rows/2 - face_position.y) * 500.0 / frameImage.rows, 0.0);  //中心座標
     glScaled(250.0, 250.0, 60.0);  //拡大縮小
     glutSolidCube(1.0);  //立方体の配置
     glPopMatrix();  //行列復帰
 
     // グローバル変数をもとに目を描画
-    // ------------------左目------------------
+    // 左目の位置に球を描画
     col[0] = 0.0; col[1] = 0.0; col[2] = 0.0;
     glMaterialfv(GL_FRONT, GL_DIFFUSE, col);  //拡散反射係数
     glMaterialfv(GL_FRONT, GL_AMBIENT, col);  //環境光反射係数
@@ -256,10 +256,11 @@ void display(void)
     glMaterialfv(GL_FRONT, GL_SPECULAR, col);
     glMaterialf(GL_FRONT, GL_SHININESS, 64);  //ハイライト係数
     glPushMatrix();  //行列一時保存
-    glTranslated((left_eye_position.x - frameImage.cols/2) * 250.0 / frameImage.cols, (frameImage.rows/2 - left_eye_position.y) * 250.0 / frameImage.rows, 30.0);  //中心座標
-    glScaled(50.0, 50.0, 10.0);  //拡大縮小
-    glutSolidCube(1.0);  //立方体の配置
+    glTranslated((left_eye_position.x - frameImage.cols/2) * 500.0 / frameImage.cols, (frameImage.rows/2 - left_eye_position.y) * 500.0 / frameImage.rows, 30.0);  //中心座標
+    glScaled(20.0, 20.0, 10.0);  //拡大縮小
+    glutSolidSphere(1.0, 100, 100); //球の配置
     glPopMatrix();  //行列復帰
+
 
     // ------------------右目------------------
     col[0] = 0.0; col[1] = 0.0; col[2] = 0.0;
@@ -269,9 +270,9 @@ void display(void)
     glMaterialfv(GL_FRONT, GL_SPECULAR, col);
     glMaterialf(GL_FRONT, GL_SHININESS, 64);  //ハイライト係数
     glPushMatrix();  //行列一時保存
-    glTranslated((right_eye_position.x - frameImage.cols/2) * 250.0 / frameImage.cols, (frameImage.rows/2 - right_eye_position.y) * 250.0 / frameImage.rows, 30.0);  //中心座標
-    glScaled(50.0, 50.0, 10.0);  //拡大縮小
-    glutSolidCube(1.0);  //立方体の配置
+    glTranslated((right_eye_position.x - frameImage.cols/2) * 500.0 / frameImage.cols, (frameImage.rows/2 - right_eye_position.y) * 500.0 / frameImage.rows, 30.0);  //中心座標
+    glScaled(20.0, 20.0, 10.0);  //拡大縮小
+    glutSolidSphere(1.0, 100, 100); //球の配置
     glPopMatrix();  //行列復帰
 
     //描画実行
