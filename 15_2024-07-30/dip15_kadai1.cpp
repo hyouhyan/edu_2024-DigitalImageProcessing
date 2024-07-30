@@ -48,6 +48,9 @@ cv::CascadeClassifier right_eyeClassifier;  // 右目認識用分類器
 cv::CascadeClassifier mouthClassifier;  // 口認識用分類器
 cv::CascadeClassifier noseClassifier;  // 鼻認識用分類器
 
+// 顔の座標を保存するグローバル変数
+cv::Rect face_position, left_eye_position, right_eye_position, mouth_position, nose_position;
+
 
 //main関数
 int main(int argc, char* argv[])
@@ -159,32 +162,53 @@ void display(void)
         }
         //取得した位置情報に基づき矩形描画
 		cv::rectangle(frameImage, cv::Point(face.x, face.y), cv::Point(face.x+face.width, face.y+face.height), CV_RGB(255,0,0), 2, 8);
+        face_position = face;
+
+        // 左目の描画
+        cv::Rect left_eye;
+        for (int j=0; j<left_eyes.size(); j++) {
+            cv::Rect left_eye_tmp = left_eyes[j];
+            // 左目がfaceの中にあるか
+            if (left_eye_tmp.x > face.x && left_eye_tmp.x < face.x + face.width && left_eye_tmp.y > face.y && left_eye_tmp.y < face.y + face.height) {
+                // 左目の位置が顔半分より左にあるか
+                if (left_eye_tmp.x < face.x + face.width/2) {
+                    // left_eyeが未設定 or left_eyeの面積がleft_eye_tmpの面積より小さい場合
+                    if (left_eye.area() == 0 || left_eye.area() > left_eye_tmp.area()) {
+                        left_eye = left_eye_tmp;
+                    }
+                }
+            }
+        }
+        if (left_eye.area() > 0) {
+            cv::rectangle(frameImage, cv::Point(left_eye.x, left_eye.y), cv::Point(left_eye.x+left_eye.width, left_eye.y+left_eye.height), CV_RGB(0,255,0), 2, 8);
+            left_eye_position = left_eye;
+        }
+
+        // 右目の描画
+        cv::Rect right_eye;
+        for (int j=0; j<right_eyes.size(); j++) {
+            cv::Rect right_eye_tmp = right_eyes[j];
+            // 右目がfaceの中にあるか
+            if (right_eye_tmp.x > face.x && right_eye_tmp.x < face.x + face.width && right_eye_tmp.y > face.y && right_eye_tmp.y < face.y + face.height) {
+                // 右目の位置が顔半分より右にあるか
+                if (right_eye_tmp.x > face.x + face.width/2) {
+                    // right_eyeが未設定 or right_eyeの面積がright_eye_tmpの面積より小さい場合
+                    if (right_eye.area() == 0 || right_eye.area() > right_eye_tmp.area()) {
+                        right_eye = right_eye_tmp;
+                    }
+                }
+            }
+        }
+        if (right_eye.area() > 0) {
+            cv::rectangle(frameImage, cv::Point(right_eye.x, right_eye.y), cv::Point(right_eye.x+right_eye.width, right_eye.y+right_eye.height), CV_RGB(0,0,255), 2, 8);
+            right_eye_position = right_eye;
+        }
     }
 
-    //左目
-    for (int i=0; i<left_eyes.size(); i++) {
-        //検出情報から位置情報を取得
-        cv::Rect left_eye = left_eyes[i];
-        //大きさによるチェック。
-        if(left_eye.width*left_eye.height<10*10){
-            continue;  //小さい矩形は採用しない
-        }
-        //取得した位置情報に基づき矩形描画
-        cv::rectangle(frameImage, cv::Point(left_eye.x, left_eye.y), cv::Point(left_eye.x+left_eye.width, left_eye.y+left_eye.height), CV_RGB(0,255,0), 2, 8);
-    }
+    std::cout << "face_position: " << face_position << std::endl;
+    std::cout << "left_eye_position: " << left_eye_position << std::endl;
+    std::cout << "right_eye_position: " << right_eye_position << std::endl;
 
-    //右目
-    for (int i=0; i<right_eyes.size(); i++) {
-        //検出情報から位置情報を取得
-        cv::Rect right_eye = right_eyes[i];
-        //大きさによるチェック。
-        if(right_eye.width*right_eye.height<10*10){
-            continue;  //小さい矩形は採用しない
-        }
-        //取得した位置情報に基づき矩形描画
-        cv::rectangle(frameImage, cv::Point(right_eye.x, right_eye.y), cv::Point(right_eye.x+right_eye.width, right_eye.y+right_eye.height), CV_RGB(0,255,0), 2, 8);
-    }
-    
     //フレーム画像表示
     cv::imshow("Frame", frameImage);
     
